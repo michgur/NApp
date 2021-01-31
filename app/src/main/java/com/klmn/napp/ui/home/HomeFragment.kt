@@ -7,8 +7,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.klmn.napp.R
 import com.klmn.napp.databinding.FragmentHomeBinding
-import com.klmn.napp.databinding.LayoutItemBinding
+import com.klmn.napp.databinding.LayoutProductBinding
+import com.klmn.napp.model.Product
 import com.klmn.napp.util.ViewBoundFragment
 import com.klmn.napp.util.ViewBoundHolder
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,16 +28,16 @@ class HomeFragment : ViewBoundFragment<FragmentHomeBinding>(FragmentHomeBinding:
         }
 
         lifecycleScope.launchWhenStarted {
-            viewModel.products.collect { products ->
-                (recyclerView.adapter as Adapter).strings = products.map { it.product_name }
+            viewModel.products.collect {
+                (recyclerView.adapter as Adapter).products = it
             }
         }
 
         Unit
     }
 
-    class Adapter : RecyclerView.Adapter<ViewBoundHolder<LayoutItemBinding>>() {
-        var strings: List<String> = listOf()
+    class Adapter : RecyclerView.Adapter<ViewBoundHolder<LayoutProductBinding>>() {
+        var products: List<Product> = listOf()
             set(value) {
                 field = value
                 notifyDataSetChanged()
@@ -43,12 +46,34 @@ class HomeFragment : ViewBoundFragment<FragmentHomeBinding>(FragmentHomeBinding:
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int
-        ) = ViewBoundHolder(parent, LayoutItemBinding::inflate)
+        ) = ViewBoundHolder(parent, LayoutProductBinding::inflate)
 
-        override fun onBindViewHolder(holder: ViewBoundHolder<LayoutItemBinding>, position: Int) {
-            holder.binding.textView.text = strings[position]
+        override fun onBindViewHolder(holder: ViewBoundHolder<LayoutProductBinding>, position: Int) {
+            val product = products[position]
+            holder.binding.apply {
+                nameTextView.text = product.product_name
+                quantityTextView.text = product.quantity
+                carbTextView.text = product.nutriments.carbohydrates_100g
+                fatTextView.text = product.nutriments.fat_100g
+                proteinTextView.text = product.nutriments.proteins_100g
+                energyUnitTextView.text = product.nutriments.energy_unit
+                energyTextView.text = product.nutriments.energy
+
+                root.setOnClickListener {
+                    root.dispatchSetSelected(true)
+                }
+
+                Glide.with(root)
+                    .load(product.image_small_url)
+                    .fitCenter()
+                    .into(imageView)
+                Glide.with(root)
+                    .load(product.image_small_url)
+                    .centerCrop()
+                    .into(washImageView)
+            }
         }
 
-        override fun getItemCount() = strings.size
+        override fun getItemCount() = products.size
     }
 }

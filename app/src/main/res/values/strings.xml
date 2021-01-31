@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">NApp</string>
+    <string name="percent">%</string>
 </resources>

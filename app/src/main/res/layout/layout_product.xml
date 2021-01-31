@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="120dp">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/wash_image_view"
+        android:layout_width="88dp"
+        android:layout_height="88dp"
+        android:layout_marginStart="16dp"
+        android:alpha="0.3"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.NApp.CornerSize20dp"
+        tools:src="@drawable/food_item" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/image_view"
+        android:layout_width="88dp"
+        android:layout_height="88dp"
+        android:layout_marginStart="16dp"
+        android:scaleType="fitStart"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.NApp.CornerSize20dp"
+        tools:src="@drawable/food_item" />
+
+    <TextView
+        android:id="@+id/name_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:ellipsize="marquee"
+        android:fadingEdge="horizontal"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textAppearance="@style/TextAppearance.NApp.Headline"
+        app:layout_constraintEnd_toStartOf="@+id/vegan_image_view"
+        app:layout_constraintStart_toEndOf="@+id/wash_image_view"
+        app:layout_constraintTop_toTopOf="@+id/wash_image_view"
+        tools:text="Eau Cristaline" />
+
+    <TextView
+        android:id="@+id/quantity_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.NApp.Subtitle1"
+        app:layout_constraintStart_toStartOf="@+id/name_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/name_text_view"
+        tools:text="150cl" />
+
+    <ImageView
+        android:id="@+id/carb_iamge_view"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@drawable/shape_circle"
+        android:backgroundTint="@color/orange_100"
+        android:src="@drawable/ic_wheat"
+        app:layout_constraintBottom_toTopOf="@+id/carb_text_view"
+        app:layout_constraintStart_toStartOf="@+id/name_text_view"
+        app:tint="@color/white" />
+
+    <TextView
+        android:id="@+id/carb_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.NApp.Subtitle2"
+        app:layout_constraintBottom_toBottomOf="@+id/wash_image_view"
+        app:layout_constraintEnd_toEndOf="@+id/carb_iamge_view"
+        app:layout_constraintStart_toStartOf="@+id/carb_iamge_view"
+        tools:text="0" />
+
+    <ImageView
+        android:id="@+id/protein_iamge_view"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/shape_circle"
+        android:backgroundTint="@color/red_100"
+        android:src="@drawable/ic_meat"
+        app:layout_constraintBottom_toTopOf="@+id/protein_text_view"
+        app:layout_constraintStart_toEndOf="@+id/carb_iamge_view"
+        app:tint="@color/white" />
+
+    <TextView
+        android:id="@+id/protein_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.NApp.Subtitle2"
+        app:layout_constraintBottom_toBottomOf="@+id/wash_image_view"
+        app:layout_constraintEnd_toEndOf="@+id/protein_iamge_view"
+        app:layout_constraintStart_toStartOf="@+id/protein_iamge_view"
+        tools:text="0" />
+
+    <ImageView
+        android:id="@+id/fat_iamge_view"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/shape_circle"
+        android:backgroundTint="@color/green_100"
+        android:src="@drawable/ic_oil"
+        app:layout_constraintBottom_toTopOf="@+id/fat_text_view"
+        app:layout_constraintStart_toEndOf="@+id/protein_iamge_view"
+        app:tint="@color/white" />
+
+    <TextView
+        android:id="@+id/fat_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.NApp.Subtitle2"
+        app:layout_constraintBottom_toBottomOf="@+id/wash_image_view"
+        app:layout_constraintEnd_toEndOf="@+id/fat_iamge_view"
+        app:layout_constraintStart_toStartOf="@+id/fat_iamge_view"
+        tools:text="100" />
+
+    <TextView
+        android:id="@+id/energy_unit_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:textAppearance="@style/TextAppearance.NApp.Subtitle1"
+        app:layout_constraintBottom_toBottomOf="@+id/wash_image_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="kcal" />
+
+    <TextView
+        android:id="@+id/energy_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:textAppearance="@style/TextAppearance.NApp.Headline"
+        app:layout_constraintBottom_toBottomOf="@+id/wash_image_view"
+        app:layout_constraintEnd_toStartOf="@+id/energy_unit_text_view"
+        tools:text="500" />
+
+    <ImageView
+        android:id="@+id/vegan_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:src="@drawable/ic_leaf"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/green_a400" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.40" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:alpha="0.1"
+        android:text="@string/percent"
+        android:textColor="?attr/colorOnBackground"
+        android:textSize="75sp"
+        app:layout_constraintStart_toEndOf="@+id/fat_iamge_view"
+        app:layout_constraintTop_toTopOf="@+id/guideline" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
