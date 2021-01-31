@@ -1,9 +1,11 @@
-package com.klmn.napp
+package com.klmn.napp.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import com.klmn.napp.R
+import dagger.hilt.android.AndroidEntryPoint
 
 /*
 * Features:
@@ -11,6 +13,7 @@ import androidx.navigation.findNavController
 *   MVVM / MVI architecture
 * */
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
 
