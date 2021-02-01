@@ -12,6 +12,7 @@
         android:layout_height="88dp"
         android:layout_marginStart="16dp"
         android:alpha="0.3"
+        android:elevation="4dp"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,7 +25,8 @@
         android:layout_width="88dp"
         android:layout_height="88dp"
         android:layout_marginStart="16dp"
-        android:scaleType="fitStart"
+        android:elevation="4dp"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -151,23 +153,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/green_a400" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.40" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:alpha="0.06"
-        android:text="@string/percent"
-        android:textColor="?attr/colorOnBackground"
-        android:textSize="75sp"
-        app:layout_constraintStart_toEndOf="@+id/fat_iamge_view"
-        app:layout_constraintTop_toTopOf="@+id/guideline" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

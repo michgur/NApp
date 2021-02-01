@@ -14,7 +14,7 @@ class RepositoryImpl(
         .map { it.name }
         .reduce { a, b -> "$a,$b" }
 
-    override suspend fun getProducts() = api.getProducts(fieldsQuery).let { response ->
+    override suspend fun getProducts(query: String) = api.getProducts(query, fieldsQuery).let { response ->
         if (response.isSuccessful) response.body()?.products?.filterNot {
             it.product_name.isNullOrBlank() ||
             it.quantity.isNullOrBlank()

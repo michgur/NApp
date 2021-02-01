@@ -9,13 +9,13 @@ object NutrimentsNetworkEntityMapper : EntityModelMapper<NutrimentsEntity, Nutri
     }
 
     override fun toModel(entity: NutrimentsEntity) = Nutriments(
-            entity.carbohydrates_100g.toFloat(),
-            entity.carbohydrates_unit,
-            entity.energy.toInt(),
-            entity.energy_unit,
-            entity.fat_100g.toFloat(),
-            entity.fat_unit,
-            entity.proteins_100g.toFloat(),
-            entity.proteins_unit
+        entity.carbohydrates_100g.toFloat(),
+        entity.carbohydrates_unit,
+        entity.energy.toFloat().toInt(),
+        entity.energy_unit,
+        entity.fat_100g.toFloat(),
+        entity.fat_unit,
+        entity.proteins_100g.toFloat(),
+        entity.proteins_unit
     )
 }

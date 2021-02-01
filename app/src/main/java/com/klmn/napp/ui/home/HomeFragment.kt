@@ -3,10 +3,15 @@ package com.klmn.napp.ui.home
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.klmn.napp.R
 import com.klmn.napp.databinding.FragmentHomeBinding
 import com.klmn.napp.model.Product
 import com.klmn.napp.util.ViewBoundFragment
@@ -26,6 +31,18 @@ class HomeFragment : ViewBoundFragment<FragmentHomeBinding>(FragmentHomeBinding:
         lifecycleScope.launchWhenStarted {
             viewModel.products.collect {
                 (recyclerView.adapter as Adapter).products = it
+            }
+        }
+
+        (requireActivity() as AppCompatActivity).supportActionBar?.apply {
+            setDisplayShowCustomEnabled(true)
+            setDisplayShowTitleEnabled(false)
+            setDisplayShowHomeEnabled(false)
+            setCustomView(R.layout.layout_search)
+            (customView as EditText).setOnEditorActionListener { textView, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE)
+                    viewModel.query.value = textView.text.toString()
+                true
             }
         }
 
