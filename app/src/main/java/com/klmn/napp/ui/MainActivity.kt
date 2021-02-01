@@ -11,6 +11,11 @@ import dagger.hilt.android.AndroidEntryPoint
 * Features:
 *   Retrofit / Room repository
 *   MVVM / MVI architecture
+*
+* Actions:
+*   Home page- recommended stuff
+*   Search by category / other tags
+*   View a product
 * */
 
 @AndroidEntryPoint

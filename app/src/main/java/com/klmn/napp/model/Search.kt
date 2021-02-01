@@ -1,10 +1,12 @@
 package com.klmn.napp.model
 
+import com.klmn.napp.data.network.entities.ProductEntity
+
 data class Search(
     val page_size: Int = 0,
-    val page: String = "",
+    val page: Int = 0,
     val page_count: Int = 0,
-    val count: String = "",
+    val count: Int = 0,
     val skip: Int = 0,
-    val products: List<Product> = listOf()
+    val products: List<ProductEntity> = listOf()
 )

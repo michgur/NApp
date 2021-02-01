@@ -14,6 +14,7 @@ import com.klmn.napp.databinding.LayoutProductBinding
 import com.klmn.napp.model.Product
 import com.klmn.napp.util.ViewBoundFragment
 import com.klmn.napp.util.ViewBoundHolder
+import com.klmn.napp.util.loadImage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -36,7 +37,7 @@ class HomeFragment : ViewBoundFragment<FragmentHomeBinding>(FragmentHomeBinding:
         Unit
     }
 
-    class Adapter : RecyclerView.Adapter<ViewBoundHolder<LayoutProductBinding>>() {
+    inner class Adapter : RecyclerView.Adapter<ViewBoundHolder<LayoutProductBinding>>() {
         var products: List<Product> = listOf()
             set(value) {
                 field = value
@@ -51,8 +52,8 @@ class HomeFragment : ViewBoundFragment<FragmentHomeBinding>(FragmentHomeBinding:
         override fun onBindViewHolder(holder: ViewBoundHolder<LayoutProductBinding>, position: Int) {
             val product = products[position]
             holder.binding.apply {
-                nameTextView.text = product.product_name
-                quantityTextView.text = product.quantity
+                nameTextView.text = product.name
+                quantityTextView.text = getString(R.string.quantity_with_unit, product.quantity, "g")
                 carbTextView.text = product.nutriments.carbohydrates_100g
                 fatTextView.text = product.nutriments.fat_100g
                 proteinTextView.text = product.nutriments.proteins_100g
@@ -62,15 +63,14 @@ class HomeFragment : ViewBoundFragment<FragmentHomeBinding>(FragmentHomeBinding:
                 root.setOnClickListener {
                     root.dispatchSetSelected(true)
                 }
-
-                Glide.with(root)
-                    .load(product.image_small_url)
-                    .fitCenter()
-                    .into(imageView)
-                Glide.with(root)
-                    .load(product.image_small_url)
-                    .centerCrop()
-                    .into(washImageView)
+                loadImage(requireContext(), product.image_small_url, R.drawable.food_item).also {
+                    lifecycleScope.launchWhenStarted {
+                        it.collect {
+                            imageView.setImageDrawable(it)
+                            washImageView.setImageDrawable(it)
+                        }
+                    }
+                }
             }
         }
 

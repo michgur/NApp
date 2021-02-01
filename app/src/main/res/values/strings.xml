@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">NApp</string>
     <string name="percent">%</string>
+    <string name="quantity_with_unit">%1$d %2$s</string>
 </resources>

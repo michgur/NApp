@@ -3,6 +3,10 @@ package com.klmn.napp.di
 import com.klmn.napp.data.Repository
 import com.klmn.napp.data.RepositoryImpl
 import com.klmn.napp.data.network.OFFAPI
+import com.klmn.napp.data.network.entities.ProductEntity
+import com.klmn.napp.data.network.entities.ProductNetworkEntityMapper
+import com.klmn.napp.model.Product
+import com.klmn.slapp.common.EntityModelMapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,5 +30,11 @@ object NAppModule {
     fun provideOFFAPI(retrofit: Retrofit): OFFAPI = retrofit.create(OFFAPI::class.java)
 
     @Provides @Singleton
-    fun provideRepository(api: OFFAPI): Repository = RepositoryImpl(api)
+    fun provideNetworkEntityMapper(): EntityModelMapper<ProductEntity, Product> = ProductNetworkEntityMapper
+
+    @Provides @Singleton
+    fun provideRepository(
+            api: OFFAPI,
+            networkEntityMapper: EntityModelMapper<ProductEntity, Product>
+    ): Repository = RepositoryImpl(api, networkEntityMapper)
 }
