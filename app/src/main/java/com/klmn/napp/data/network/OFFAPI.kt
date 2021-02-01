@@ -6,7 +6,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface OFFAPI {
-    @GET("category/chocolate-spreads/1.json")
+    @GET("/1.json")
     suspend fun getProducts(
             @Query("fields") fields: String
     ): Response<Search>

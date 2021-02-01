@@ -9,9 +9,11 @@ object ProductNetworkEntityMapper : EntityModelMapper<ProductEntity, Product> {
     }
 
     override fun toModel(entity: ProductEntity) = Product(
-            entity.product_name!!,
-            entity.quantity!!.filter { it.isDigit() }.toInt(),
-            entity.image_small_url,
-            NutrimentsNetworkEntityMapper.toModel(entity.nutriments)
+        entity.product_name!!,
+        entity.quantity!!.filter { it.isDigit() }.toInt(),
+        entity.quantity.filter { it.isLetter() },
+        entity.image_small_url,
+        entity.ingredients_analysis_tags?.contains("en:vegan") ?: false,
+        NutrimentsNetworkEntityMapper.toModel(entity.nutriments)
     )
 }

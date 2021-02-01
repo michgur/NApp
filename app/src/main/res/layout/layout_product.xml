@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="120dp">
+    android:layout_height="120dp"
+    android:background="?attr/selectableItemBackground">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/wash_image_view"
@@ -162,7 +163,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:alpha="0.1"
+        android:alpha="0.06"
         android:text="@string/percent"
         android:textColor="?attr/colorOnBackground"
         android:textSize="75sp"
