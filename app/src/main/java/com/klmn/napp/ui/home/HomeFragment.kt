@@ -68,9 +68,6 @@ class HomeFragment : ViewBoundFragment<FragmentHomeBinding>(FragmentHomeBinding:
             }
         }
 
-        if (viewModel.categories.value.isEmpty())
-            viewModel.parseCategories(resources.getStringArray(R.array.categories))
-
         (requireActivity() as AppCompatActivity).supportActionBar?.apply {
             setDisplayShowCustomEnabled(true)
             setDisplayShowTitleEnabled(false)

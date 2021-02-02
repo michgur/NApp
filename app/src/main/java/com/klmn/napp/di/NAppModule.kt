@@ -1,9 +1,11 @@
 package com.klmn.napp.di
 
 import android.content.Context
+import androidx.room.Room
 import com.klmn.napp.R
 import com.klmn.napp.data.Repository
 import com.klmn.napp.data.RepositoryImpl
+import com.klmn.napp.data.cache.Database
 import com.klmn.napp.data.network.OpenFoodFactsAPI
 import com.klmn.napp.data.network.PixabayAPI
 import com.klmn.napp.data.network.entities.ProductEntity
@@ -25,6 +27,13 @@ import javax.inject.Singleton
 object NAppModule {
     private const val OFF_URL = "https://world.openfoodfacts.org/"
     const val PIXABAY_URL = "https://pixabay.com/api/"
+
+    @Provides @Singleton
+    fun provideDatabase(@ApplicationContext context: Context): Database = Room.databaseBuilder(
+            context,
+            Database::class.java,
+            "NAPP_DATABASE"
+    ).build()
 
     @Provides @Singleton
     fun provideOFFAPI(): OpenFoodFactsAPI = Retrofit.Builder()
@@ -61,8 +70,16 @@ object NAppModule {
 
     @Provides @Singleton
     fun provideRepository(
+            @ApplicationContext context: Context,
+            database: Database,
             openFoodFactsAPI: OpenFoodFactsAPI,
             networkEntityMapper: EntityModelMapper<ProductEntity, Product>,
             pixabayAPI: PixabayAPI
-    ): Repository = RepositoryImpl(openFoodFactsAPI, networkEntityMapper, pixabayAPI)
+    ): Repository = RepositoryImpl(
+            context,
+            database.dao(),
+            openFoodFactsAPI,
+            networkEntityMapper,
+            pixabayAPI
+    )
 }

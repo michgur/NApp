@@ -26,13 +26,9 @@ class HomeViewModel @Inject constructor(
     private val _categories = MutableStateFlow(listOf<Category>())
     val categories get() = _categories.asStateFlow()
 
-    fun parseCategories(categories: Array<String>) {
+    init {
         viewModelScope.launch {
-            _categories.value = categories.map { c ->
-                c.split("|").let {
-                    Category(it[0], it[1], repository.getCategoryImageURL(it[1]))
-                }
-            }
+            _categories.value = repository.getCategories()
         }
     }
 }
