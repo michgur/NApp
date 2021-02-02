@@ -2,4 +2,8 @@
     <string name="app_name">NApp</string>
     <string name="percent">%</string>
     <string name="quantity_with_unit">%1$d %2$s</string>
+    <string name="products">Products</string>
+    <string name="products_subtitle">Explore Food Products</string>
+    <string name="categories">Categories</string>
+    <string name="categories_subtitle">Find Products in Specific Categories</string>
 </resources>

@@ -1,24 +1,37 @@
 package com.klmn.napp.data
 
-import com.klmn.napp.data.network.OFFAPI
+import com.klmn.napp.data.network.OpenFoodFactsAPI
+import com.klmn.napp.data.network.PixabayAPI
 import com.klmn.napp.data.network.entities.ProductEntity
 import com.klmn.napp.model.Product
 import com.klmn.slapp.common.EntityModelMapper
 import kotlin.reflect.full.declaredMemberProperties
 
 class RepositoryImpl(
-    private val api: OFFAPI,
-    private val mapper: EntityModelMapper<ProductEntity, Product>
+        private val openFoodFactsAPI: OpenFoodFactsAPI,
+        private val mapper: EntityModelMapper<ProductEntity, Product>,
+        private val pixabayAPI: PixabayAPI
 ) : Repository {
     private val fieldsQuery = ProductEntity::class.declaredMemberProperties
         .map { it.name }
         .reduce { a, b -> "$a,$b" }
 
-    override suspend fun getProducts(query: String) = api.getProducts(query, fieldsQuery).let { response ->
+    override suspend fun getProducts(query: String) = openFoodFactsAPI.getProducts(query, fieldsQuery).let { response ->
         if (response.isSuccessful) response.body()?.products?.filterNot {
             it.product_name.isNullOrBlank() ||
             it.quantity.isNullOrBlank()
         }?.let { mapper.toModelList(it) } ?: listOf()
         else throw RuntimeException(response.errorBody().toString())
     }
+
+    override suspend fun getCategoryImageURL(name: String) = pixabayAPI
+        .getImageURL(encodeURL(name)).let { response ->
+            if (response.isSuccessful)
+                response.body()?.hits?.get(0)?.webformatURL ?:
+                response.body()?.hits?.get(1)?.webformatURL ?:
+                response.body()?.hits?.get(2)?.webformatURL ?: ""
+            else throw RuntimeException(response.errorBody().toString())
+        }
+
+    private fun encodeURL(string: String) = string.replace(' ', '+')
 }

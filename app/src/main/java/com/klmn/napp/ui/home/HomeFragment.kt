@@ -6,15 +6,17 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.klmn.napp.R
 import com.klmn.napp.databinding.FragmentHomeBinding
+import com.klmn.napp.databinding.LayoutCategoryBinding
 import com.klmn.napp.model.Product
 import com.klmn.napp.util.ViewBoundFragment
+import com.klmn.napp.util.ViewBoundHolder
+import com.klmn.napp.util.loadImage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -23,16 +25,51 @@ class HomeFragment : ViewBoundFragment<FragmentHomeBinding>(FragmentHomeBinding:
     private val viewModel: HomeViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
-        recyclerView.apply {
+        productsRecyclerView.apply {
             adapter = Adapter()
             layoutManager = LinearLayoutManager(requireContext())
         }
 
-        lifecycleScope.launchWhenStarted {
-            viewModel.products.collect {
-                (recyclerView.adapter as Adapter).products = it
+        categoriesRecyclerView.apply {
+            adapter = object : RecyclerView.Adapter<ViewBoundHolder<LayoutCategoryBinding>>() {
+                override fun onCreateViewHolder(
+                    parent: ViewGroup,
+                    viewType: Int
+                ) = ViewBoundHolder(parent, LayoutCategoryBinding::inflate)
+
+                override fun onBindViewHolder(
+                    holder: ViewBoundHolder<LayoutCategoryBinding>,
+                    position: Int
+                ) {
+                    val category = viewModel.categories.value[position]
+                    category.imageURL?.let {
+                        lifecycleScope.launchWhenStarted {
+                            loadImage(requireContext(), it, R.drawable.ic_product).collect {
+                                holder.binding.imageView.setImageDrawable(it)
+                            }
+                        }
+                    }
+                    holder.binding.nameTextView.text = category.name
+                }
+
+                override fun getItemCount() = viewModel.categories.value.size
             }
         }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.products.collect {
+                (productsRecyclerView.adapter as Adapter).products = it
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.categories.collect {
+                categoriesRecyclerView.adapter?.notifyDataSetChanged()
+            }
+        }
+
+        if (viewModel.categories.value.isEmpty())
+            viewModel.parseCategories(resources.getStringArray(R.array.categories))
 
         (requireActivity() as AppCompatActivity).supportActionBar?.apply {
             setDisplayShowCustomEnabled(true)

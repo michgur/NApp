@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="categories">
+        <item>beverages|Beverages</item>
+        <item>dairies|Dairies</item>
+        <item>snacks|Snacks</item>
+        <item>meats|Meats</item>
+        <item>plant-based-foods|Plant Based</item>
+        <item>cheeses|Cheeses</item>
+        <item>frozen-foods|Frozen Foods</item>
+        <item>spreads|Spreads</item>
+        <item>breads|Breads</item>
+    </string-array>
+</resources>

@@ -44,7 +44,7 @@
         android:marqueeRepeatLimit="marquee_forever"
         android:scrollHorizontally="true"
         android:singleLine="true"
-        android:textAppearance="@style/TextAppearance.NApp.Headline"
+        android:textAppearance="@style/TextAppearance.NApp.Headline2"
         app:layout_constraintEnd_toStartOf="@+id/vegan_image_view"
         app:layout_constraintStart_toEndOf="@+id/wash_image_view"
         app:layout_constraintTop_toTopOf="@+id/wash_image_view"
@@ -139,7 +139,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"
-        android:textAppearance="@style/TextAppearance.NApp.Headline"
+        android:textAppearance="@style/TextAppearance.NApp.Headline2"
         app:layout_constraintBottom_toBottomOf="@+id/wash_image_view"
         app:layout_constraintEnd_toStartOf="@+id/energy_unit_text_view"
         tools:text="500" />
