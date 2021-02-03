@@ -12,7 +12,7 @@ import androidx.viewbinding.ViewBinding
 * are the same & the class' equals() to check if contents are the same
 * */
 @SuppressLint("DiffUtilEquals")
-fun <T, ID> diffCallback(getId: (T) -> ID) = object : DiffUtil.ItemCallback<T>() {
+fun <T, ID> diffCallback(getId: (item: T) -> ID) = object : DiffUtil.ItemCallback<T>() {
     override fun areItemsTheSame(oldItem: T, newItem: T) = getId(oldItem) == getId(newItem)
     override fun areContentsTheSame(oldItem: T, newItem: T) = oldItem == newItem
 }
@@ -24,8 +24,8 @@ fun <T, ID> diffCallback(getId: (T) -> ID) = object : DiffUtil.ItemCallback<T>()
 * */
 fun <T, B : ViewBinding> listAdapter(
     diffCallback: DiffUtil.ItemCallback<T>,
-    inflate: (LayoutInflater, ViewGroup?, Boolean) -> B,
-    bind: B.(T) -> Unit
+    inflate: (inflater: LayoutInflater, parent: ViewGroup?, attachToParent: Boolean) -> B,
+    bind: B.(item: T) -> Unit
 ) = object : ListAdapter<T, ViewBoundHolder<B>>(diffCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewBoundHolder(parent, inflate)

@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 
 abstract class ViewBoundFragment<T : ViewBinding>(
-    private val inflate: (LayoutInflater, ViewGroup?, Boolean) -> T
+    private val inflate: (inflater: LayoutInflater, parent: ViewGroup?, attachToParent: Boolean) -> T
 ) : Fragment() {
     private var _binding: T? = null
     val binding get() = _binding!!

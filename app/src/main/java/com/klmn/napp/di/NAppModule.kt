@@ -11,7 +11,7 @@ import com.klmn.napp.data.network.PixabayAPI
 import com.klmn.napp.data.network.entities.ProductEntity
 import com.klmn.napp.data.network.entities.ProductNetworkEntityMapper
 import com.klmn.napp.model.Product
-import com.klmn.slapp.common.EntityModelMapper
+import com.klmn.napp.util.EntityModelMapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -70,11 +70,11 @@ object NAppModule {
 
     @Provides @Singleton
     fun provideRepository(
-            @ApplicationContext context: Context,
-            database: Database,
-            openFoodFactsAPI: OpenFoodFactsAPI,
-            networkEntityMapper: EntityModelMapper<ProductEntity, Product>,
-            pixabayAPI: PixabayAPI
+        @ApplicationContext context: Context,
+        database: Database,
+        openFoodFactsAPI: OpenFoodFactsAPI,
+        networkEntityMapper: EntityModelMapper<ProductEntity, Product>,
+        pixabayAPI: PixabayAPI
     ): Repository = RepositoryImpl(
             context,
             database.dao(),

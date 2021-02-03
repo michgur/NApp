@@ -1,7 +1,7 @@
 package com.klmn.napp.data.network.entities
 
 import com.klmn.napp.model.Product
-import com.klmn.slapp.common.EntityModelMapper
+import com.klmn.napp.util.EntityModelMapper
 
 object ProductNetworkEntityMapper : EntityModelMapper<ProductEntity, Product> {
     override fun toEntity(model: Product): ProductEntity {

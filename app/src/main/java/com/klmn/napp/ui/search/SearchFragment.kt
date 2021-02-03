@@ -1,4 +1,4 @@
-package com.klmn.napp.ui.home
+package com.klmn.napp.ui.search
 
 import android.os.Bundle
 import android.view.View
@@ -6,48 +6,35 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.klmn.napp.R
-import com.klmn.napp.databinding.FragmentHomeBinding
-import com.klmn.napp.databinding.LayoutCategoryBinding
+import com.klmn.napp.databinding.FragmentSearchBinding
 import com.klmn.napp.databinding.LayoutProductBinding
-import com.klmn.napp.model.Category
 import com.klmn.napp.model.Product
 import com.klmn.napp.util.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
-class HomeFragment : ViewBoundFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
-    private val viewModel: HomeViewModel by viewModels()
+class SearchFragment : ViewBoundFragment<FragmentSearchBinding>(FragmentSearchBinding::inflate) {
+    private val viewModel: SearchViewModel by viewModels()
+    private val args: SearchFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
         productsRecyclerView.adapter = productAdapter
-        categoriesRecyclerView.adapter = categoryAdapter
+        productsRecyclerView.doOnScroll(viewModel::onScroll)
 
         lifecycleScope.launchWhenStarted {
             viewModel.products.collect(productAdapter::submitList)
         }
-        lifecycleScope.launchWhenStarted {
-            viewModel.categories.collect(categoryAdapter::submitList)
-        }
 
-        Unit
+        viewModel.search(args.query)
     }
 
-    private val categoryAdapter = listAdapter(
-        diffCallback { it.name },
-        LayoutCategoryBinding::inflate
-    ) { category: Category ->
-        category.imageURL?.let { url ->
-            loadImage(url, R.drawable.ic_product, imageView)
-        }
-        nameTextView.text = category.name
-    }
+    private fun onSearch(query: String) = viewModel.search(query)
 
     private val productAdapter = listAdapter(
         diffCallback { it.name },

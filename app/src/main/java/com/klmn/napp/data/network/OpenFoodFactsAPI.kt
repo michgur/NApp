@@ -10,7 +10,8 @@ interface OpenFoodFactsAPI {
     suspend fun getProducts(
         @Query("search_terms") query: String,
         @Query("fields") fields: String,
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("page_size") pageSize: Int
     ): Response<Search>
 
     @GET("/categories?json=1")

@@ -9,7 +9,7 @@ import com.klmn.napp.data.network.PixabayAPI
 import com.klmn.napp.data.network.entities.ProductEntity
 import com.klmn.napp.model.Category
 import com.klmn.napp.model.Product
-import com.klmn.slapp.common.EntityModelMapper
+import com.klmn.napp.util.EntityModelMapper
 import kotlin.reflect.full.declaredMemberProperties
 
 class RepositoryImpl(
@@ -23,8 +23,8 @@ class RepositoryImpl(
         .map { it.name }
         .reduce { a, b -> "$a,$b" }
 
-    override suspend fun getProducts(query: String, page: Int) = openFoodFactsAPI
-        .getProducts(query, fieldsQuery, page).let { response ->
+    override suspend fun getProducts(query: String, page: Int, pageSize: Int) = openFoodFactsAPI
+        .getProducts(query, fieldsQuery, page, pageSize).let { response ->
             if (response.isSuccessful) response.body()?.products?.filterNot {
                 it.product_name.isNullOrBlank() ||
                     it.quantity.isNullOrBlank()

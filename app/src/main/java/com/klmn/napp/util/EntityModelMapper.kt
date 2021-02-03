@@ -1,4 +1,4 @@
-package com.klmn.slapp.common
+package com.klmn.napp.util
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations

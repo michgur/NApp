@@ -1,7 +1,7 @@
 package com.klmn.napp.data.cache
 
 import com.klmn.napp.model.Category
-import com.klmn.slapp.common.EntityModelMapper
+import com.klmn.napp.util.EntityModelMapper
 
 object CategoryCacheMapper : EntityModelMapper<CacheEntities.Category, Category> {
     override fun toEntity(model: Category) = CacheEntities.Category(
