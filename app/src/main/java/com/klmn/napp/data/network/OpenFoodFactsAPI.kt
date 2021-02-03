@@ -9,9 +9,12 @@ interface OpenFoodFactsAPI {
     @GET("/cgi/search.pl?json=1")
     suspend fun getProducts(
         @Query("search_terms") query: String,
-        @Query("fields") fields: String
+        @Query("fields") fields: String,
+        @Query("page") page: Int
     ): Response<Search>
 
     @GET("/categories?json=1")
-    suspend fun getCategories(): Response<Search>
+    suspend fun getCategories(
+        @Query("string") query: String
+    ): Response<Search>
 }

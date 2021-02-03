@@ -2,21 +2,20 @@ package com.klmn.napp.ui.home
 
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.klmn.napp.R
 import com.klmn.napp.databinding.FragmentHomeBinding
 import com.klmn.napp.databinding.LayoutCategoryBinding
+import com.klmn.napp.databinding.LayoutProductBinding
+import com.klmn.napp.model.Category
 import com.klmn.napp.model.Product
-import com.klmn.napp.util.ViewBoundFragment
-import com.klmn.napp.util.ViewBoundHolder
-import com.klmn.napp.util.loadImage
+import com.klmn.napp.util.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -25,76 +24,66 @@ class HomeFragment : ViewBoundFragment<FragmentHomeBinding>(FragmentHomeBinding:
     private val viewModel: HomeViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
-        productsRecyclerView.apply {
-            adapter = Adapter()
-            layoutManager = LinearLayoutManager(requireContext())
-        }
+        productsRecyclerView.adapter = productAdapter
+        categoriesRecyclerView.adapter = categoryAdapter
 
-        categoriesRecyclerView.apply {
-            adapter = object : RecyclerView.Adapter<ViewBoundHolder<LayoutCategoryBinding>>() {
-                override fun onCreateViewHolder(
-                    parent: ViewGroup,
-                    viewType: Int
-                ) = ViewBoundHolder(parent, LayoutCategoryBinding::inflate)
-
-                override fun onBindViewHolder(
-                    holder: ViewBoundHolder<LayoutCategoryBinding>,
-                    position: Int
-                ) {
-                    val category = viewModel.categories.value[position]
-                    category.imageURL?.let {
-                        lifecycleScope.launchWhenStarted {
-                            loadImage(requireContext(), it, R.drawable.ic_product).collect {
-                                holder.binding.imageView.setImageDrawable(it)
-                            }
-                        }
-                    }
-                    holder.binding.nameTextView.text = category.name
-                }
-
-                override fun getItemCount() = viewModel.categories.value.size
-            }
+        lifecycleScope.launchWhenStarted {
+            viewModel.products.collect(productAdapter::submitList)
         }
 
         lifecycleScope.launchWhenStarted {
-            viewModel.products.collect {
-                (productsRecyclerView.adapter as Adapter).products = it
-            }
+            viewModel.categories.collect(categoryAdapter::submitList)
         }
 
-        lifecycleScope.launchWhenStarted {
-            viewModel.categories.collect {
-                categoriesRecyclerView.adapter?.notifyDataSetChanged()
-            }
-        }
-
-        (requireActivity() as AppCompatActivity).supportActionBar?.apply {
-            setDisplayShowCustomEnabled(true)
-            setDisplayShowTitleEnabled(false)
-            setDisplayShowHomeEnabled(false)
-            setCustomView(R.layout.layout_search)
-            (customView as EditText).setOnEditorActionListener { textView, actionId, _ ->
-                if (actionId == EditorInfo.IME_ACTION_DONE)
-                    viewModel.query.value = textView.text.toString()
-                true
-            }
-        }
-
+        initActionBar((requireActivity() as AppCompatActivity).supportActionBar)
         Unit
     }
 
-    inner class Adapter : RecyclerView.Adapter<ProductViewHolder>() {
-        var products: List<Product> = listOf()
-            set(value) {
-                field = value
-                notifyDataSetChanged()
-            }
+    private fun onSearch(query: String) = viewModel.search(query)
 
-        override fun getItemCount() = products.size
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            ProductViewHolder(this@HomeFragment, parent)
+    private val categoryAdapter = listAdapter(
+        diffCallback { it.name },
+        LayoutCategoryBinding::inflate
+    ) { category: Category ->
+        category.imageURL?.let { url ->
+            loadImage(url, R.drawable.ic_product, imageView)
+        }
+        nameTextView.text = category.name
+    }
 
-        override fun onBindViewHolder(holder: ProductViewHolder, position: Int) =
-            holder.bind(products[position])
+    private val productAdapter = listAdapter(
+        diffCallback { it.name },
+        LayoutProductBinding::inflate
+    ) { product: Product ->
+        nameTextView.text = product.name
+        quantityTextView.text = requireContext().getString(
+            R.string.quantity_with_unit,
+            product.quantity,
+            product.unit
+        )
+        carbTextView.text = formatQuantity(product.nutriments.carbohydrates_100g)
+        fatTextView.text = formatQuantity(product.nutriments.fat_100g)
+        proteinTextView.text = formatQuantity(product.nutriments.proteins_100g)
+        energyUnitTextView.text = product.nutriments.energy_unit
+        energyTextView.text = product.nutriments.energy.toString()
+        veganImageView.isVisible = product.vegan
+
+        root.setOnClickListener {
+            root.dispatchSetSelected(true)
+        }
+
+        loadImage(product.image_url, R.drawable.ic_product, imageView, washImageView)
+    }
+
+    private fun initActionBar(actionBar: ActionBar?) = actionBar?.apply {
+        setDisplayShowCustomEnabled(true)
+        setDisplayShowTitleEnabled(false)
+        setDisplayShowHomeEnabled(false)
+        setCustomView(R.layout.layout_search)
+        (customView as EditText).setOnEditorActionListener { textView, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE)
+                onSearch(textView.text.toString())
+            true
+        }
     }
 }

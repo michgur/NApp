@@ -23,11 +23,11 @@ class RepositoryImpl(
         .map { it.name }
         .reduce { a, b -> "$a,$b" }
 
-    override suspend fun getProducts(query: String) = openFoodFactsAPI
-        .getProducts(query, fieldsQuery).let { response ->
+    override suspend fun getProducts(query: String, page: Int) = openFoodFactsAPI
+        .getProducts(query, fieldsQuery, page).let { response ->
             if (response.isSuccessful) response.body()?.products?.filterNot {
                 it.product_name.isNullOrBlank() ||
-                it.quantity.isNullOrBlank()
+                    it.quantity.isNullOrBlank()
             }?.let { mapper.toModelList(it) } ?: listOf()
             else throw RuntimeException(response.errorBody().toString())
         }
@@ -43,13 +43,13 @@ class RepositoryImpl(
     }
 
     private suspend fun getCategoryImageURL(name: String) = pixabayAPI
-            .getImageURL(encodeURL(name)).let { response ->
-                if (response.isSuccessful)
-                    response.body()?.hits?.get(0)?.webformatURL ?:
-                    response.body()?.hits?.get(1)?.webformatURL ?:
-                    response.body()?.hits?.get(2)?.webformatURL ?: ""
-                else throw RuntimeException(response.errorBody().toString())
-            }
+        .getImageURL(encodeURL(name)).let { response ->
+            if (response.isSuccessful)
+                response.body()?.hits?.get(0)?.webformatURL
+                    ?: response.body()?.hits?.get(1)?.webformatURL
+                    ?: response.body()?.hits?.get(2)?.webformatURL ?: ""
+            else throw RuntimeException(response.errorBody().toString())
+        }
 
     private fun encodeURL(string: String) = string.replace(' ', '+')
 }
