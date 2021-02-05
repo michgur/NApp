@@ -37,7 +37,7 @@ class HomeFragment : ViewBoundFragment<FragmentHomeBinding>(FragmentHomeBinding:
 
     private fun onCategoryClick(category: Category) {
         HomeFragmentDirections.actionHomeFragmentToSearchFragment(
-            category = category.name
+            category = category.id
         ).let { findNavController().navigate(it) }
     }
 
@@ -46,10 +46,10 @@ class HomeFragment : ViewBoundFragment<FragmentHomeBinding>(FragmentHomeBinding:
         diffCallback { it.name },
         LayoutCategoryBinding::inflate
     ) { category: Category ->
+        nameTextView.text = category.name
         category.imageURL?.let { url ->
             loadImage(url, R.drawable.ic_product, imageView)
         }
-        nameTextView.text = category.name
         root.setOnClickListener {
             onCategoryClick(category)
         }

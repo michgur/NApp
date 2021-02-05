@@ -26,7 +26,7 @@ class RepositoryImpl(
         pageSize,
         if (category != null) OpenFoodFactsAPI.searchOptions(
             OpenFoodFactsAPI.OrderBy.DATE_MODIFIED,
-            Triple("categories", "beverages", true)
+            Triple("categories", category, true)
         ) else OpenFoodFactsAPI.searchOptions(OpenFoodFactsAPI.OrderBy.DATE_MODIFIED)
     ).let { response ->
         if (response.isSuccessful) response.body()?.products?.mapNotNull {
