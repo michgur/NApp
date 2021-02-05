@@ -1,4 +1,4 @@
-package com.klmn.napp.ui
+package com.klmn.napp.ui.components
 
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -20,16 +20,18 @@ fun Fragment.productListAdapter() = listAdapter(
         product.quantity,
         product.unit
     )
-    carbTextView.text = formatQuantity(product.nutriments.carbohydrates_100g)
-    fatTextView.text = formatQuantity(product.nutriments.fat_100g)
-    proteinTextView.text = formatQuantity(product.nutriments.proteins_100g)
-    energyUnitTextView.text = product.nutriments.energy_unit
-    energyTextView.text = product.nutriments.energy.toString()
+    carbTextView.text = formatQuantity(product.carbs)
+    fatTextView.text = formatQuantity(product.fat)
+    proteinTextView.text = formatQuantity(product.protein)
+    energyUnitTextView.text = getString(R.string.energy_unit)
+    energyTextView.text = product.energy.toString()
     veganImageView.isVisible = product.vegan
 
     root.setOnClickListener {
         root.dispatchSetSelected(true)
     }
 
-    loadImage(product.image_url, R.drawable.ic_product, imageView, washImageView)
+    product.imageURL?.let {
+        loadImage(product.imageURL, R.drawable.ic_product, imageView, washImageView)
+    }
 }

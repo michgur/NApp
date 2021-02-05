@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.klmn.napp.data.Repository
 import com.klmn.napp.model.Product
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -49,8 +48,6 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun updateProducts() = viewModelScope.launch {
-        println("update products (page $page)")
-        delay(3000)
         _products.value += repository.getProducts(query, page, PAGE_SIZE)
     }
 }

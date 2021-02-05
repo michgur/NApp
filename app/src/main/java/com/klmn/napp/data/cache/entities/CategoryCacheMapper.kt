@@ -1,4 +1,4 @@
-package com.klmn.napp.data.cache
+package com.klmn.napp.data.cache.entities
 
 import com.klmn.napp.model.Category
 import com.klmn.napp.util.EntityModelMapper

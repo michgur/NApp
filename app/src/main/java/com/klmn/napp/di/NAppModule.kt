@@ -8,10 +8,7 @@ import com.klmn.napp.data.RepositoryImpl
 import com.klmn.napp.data.cache.Database
 import com.klmn.napp.data.network.OpenFoodFactsAPI
 import com.klmn.napp.data.network.PixabayAPI
-import com.klmn.napp.data.network.entities.ProductEntity
-import com.klmn.napp.data.network.entities.ProductNetworkEntityMapper
-import com.klmn.napp.model.Product
-import com.klmn.napp.util.EntityModelMapper
+import com.klmn.napp.util.parameterInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,13 +17,14 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NAppModule {
-    private const val OFF_URL = "https://world.openfoodfacts.org/"
-    const val PIXABAY_URL = "https://pixabay.com/api/"
+    private const val OPEN_FOOD_FACTS_URL = "https://world.openfoodfacts.org/"
+    private const val PIXABAY_URL = "https://pixabay.com/api/"
 
     @Provides @Singleton
     fun provideDatabase(@ApplicationContext context: Context): Database = Room.databaseBuilder(
@@ -36,29 +34,25 @@ object NAppModule {
     ).build()
 
     @Provides @Singleton
-    fun provideOFFAPI(): OpenFoodFactsAPI = Retrofit.Builder()
-            .baseUrl(OFF_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(OpenFoodFactsAPI::class.java)
+    fun provideOpenFoodFactsAPI(): OpenFoodFactsAPI = Retrofit.Builder()
+        .baseUrl(OPEN_FOOD_FACTS_URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+        .create(OpenFoodFactsAPI::class.java)
 
-    @Provides @Singleton
-    fun provideOkHttpClient(
+    @Provides @Singleton @Named("pixabay")
+    fun providePixabayClient(
         @ApplicationContext context: Context
     ): OkHttpClient = OkHttpClient()
             .newBuilder()
-            .addInterceptor { chain ->
-                val key = context.resources.getString(R.string.pixabay_api)
-                val url = chain.request().url().newBuilder()
-                        .addQueryParameter("key", key)
-                        .build()
-                chain.proceed(
-                    chain.request().newBuilder().url(url).build()
-                )
-            }.build()
+            .addInterceptor(parameterInterceptor(
+                "key" to context.resources.getString(R.string.pixabay_api)
+            )).build()
 
     @Provides @Singleton
-    fun providePixabayAPI(okHttpClient: OkHttpClient): PixabayAPI = Retrofit.Builder()
+    fun providePixabayAPI(
+        @Named("pixabay") okHttpClient: OkHttpClient
+    ): PixabayAPI = Retrofit.Builder()
             .baseUrl(PIXABAY_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
@@ -66,20 +60,15 @@ object NAppModule {
             .create(PixabayAPI::class.java)
 
     @Provides @Singleton
-    fun provideNetworkEntityMapper(): EntityModelMapper<ProductEntity, Product> = ProductNetworkEntityMapper
-
-    @Provides @Singleton
     fun provideRepository(
         @ApplicationContext context: Context,
         database: Database,
         openFoodFactsAPI: OpenFoodFactsAPI,
-        networkEntityMapper: EntityModelMapper<ProductEntity, Product>,
         pixabayAPI: PixabayAPI
     ): Repository = RepositoryImpl(
-            context,
-            database.dao(),
-            openFoodFactsAPI,
-            networkEntityMapper,
-            pixabayAPI
+        context,
+        database.dao(),
+        openFoodFactsAPI,
+        pixabayAPI
     )
 }

@@ -8,7 +8,7 @@ import com.klmn.napp.R
 import com.klmn.napp.databinding.FragmentHomeBinding
 import com.klmn.napp.databinding.LayoutCategoryBinding
 import com.klmn.napp.model.Category
-import com.klmn.napp.ui.productListAdapter
+import com.klmn.napp.ui.components.productListAdapter
 import com.klmn.napp.util.ViewBoundFragment
 import com.klmn.napp.util.diffCallback
 import com.klmn.napp.util.listAdapter

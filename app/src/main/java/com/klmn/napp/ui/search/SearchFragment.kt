@@ -2,20 +2,13 @@ package com.klmn.napp.ui.search
 
 import android.os.Bundle
 import android.view.View
-import android.view.inputmethod.EditorInfo
-import android.widget.EditText
-import androidx.appcompat.app.ActionBar
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
-import com.klmn.napp.R
 import com.klmn.napp.databinding.FragmentSearchBinding
-import com.klmn.napp.databinding.LayoutProductBinding
-import com.klmn.napp.model.Product
-import com.klmn.napp.ui.productListAdapter
-import com.klmn.napp.util.*
+import com.klmn.napp.ui.components.productListAdapter
+import com.klmn.napp.util.ViewBoundFragment
+import com.klmn.napp.util.doOnScroll
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
