@@ -10,7 +10,7 @@ private val fixedQuantities = mapOf(
     "g" to (1f to "g"),
     "kg" to (1f to "kg"),
     "ml" to (1f to "ml"),
-    "l" to (1f to "l"),
+    "l" to (1f to "L"),
     "cl" to (.1f to "ml")
 )
 
@@ -18,8 +18,8 @@ private val quantityFormat = DecimalFormat().apply {
     maximumFractionDigits = 2
 }
 
-fun formatQuantity(quantity: Float): String =
-    if (quantity < 1000) quantityFormat.format(quantity)
+fun formatQuantity(quantity: Float, divideK: Boolean = true): String =
+    if (quantity < 1000 || !divideK) quantityFormat.format(quantity)
     else quantityFormat.format(quantity / 1000) + "k"
 
 fun fixQuantity(quantity: String, unit: String) =
@@ -27,8 +27,8 @@ fun fixQuantity(quantity: String, unit: String) =
         quantity.toFloatOrNull()?.div(it.first) to it.second
     }
 
-private val quantityUnitRegex = Regex("([0-9.]+)\\s*([a-zA-Z]+).*")
+private val quantityUnitRegex = Regex("([0-9,.]+)\\s*([a-zA-Z]+).*")
 
 fun extractQuantityAndUnit(string: String) = quantityUnitRegex.find(string)?.let {
-    fixQuantity(it.groupValues[1], it.groupValues[2])
+    fixQuantity(it.groupValues[1].replace(',', '.'), it.groupValues[2])
 }

@@ -9,7 +9,13 @@
         android:id="@+id/homeFragment"
         android:name="com.klmn.napp.ui.home.HomeFragment"
         android:label="HomeFragment"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+
+        <action
+            android:id="@+id/action_homeFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+
+    </fragment>
 
     <fragment
         android:id="@+id/searchFragment"
@@ -21,6 +27,11 @@
             android:name="query"
             android:defaultValue=""
             app:argType="string" />
+
+        <argument
+            android:name="category"
+            app:argType="string"
+            app:nullable="true" />
 
     </fragment>
 </navigation>

@@ -27,7 +27,7 @@ class SearchFragment : ViewBoundFragment<FragmentSearchBinding>(FragmentSearchBi
             viewModel.products.collect(productAdapter::submitList)
         }
 
-        viewModel.search(args.query)
+        viewModel.search(args.query, args.category)
     }
 
     private fun onSearch(query: String) = viewModel.search(query)

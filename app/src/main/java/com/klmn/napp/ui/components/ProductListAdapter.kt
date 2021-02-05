@@ -17,7 +17,7 @@ fun Fragment.productListAdapter() = listAdapter(
     nameTextView.text = product.name
     quantityTextView.text = requireContext().getString(
         R.string.quantity_with_unit,
-        product.quantity,
+        formatQuantity(product.quantity, false),
         product.unit
     )
     carbTextView.text = formatQuantity(product.carbs)

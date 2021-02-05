@@ -24,11 +24,13 @@ class SearchViewModel @Inject constructor(
 
     private var page = 1
     private var query = ""
+    private var category: String? = null
 
     companion object { const val PAGE_SIZE = 20 }
 
-    fun search(query: String) {
-        this.query = query
+    fun search(query: String? = null, category: String? = null) {
+        query?.let(this::query::set)
+        category?.let(this::category::set)
         resetProducts()
         updateProducts()
     }
@@ -48,6 +50,6 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun updateProducts() = viewModelScope.launch {
-        _products.value += repository.getProducts(query, page, PAGE_SIZE)
+        _products.value += repository.getProducts(query, page, PAGE_SIZE, category)
     }
 }

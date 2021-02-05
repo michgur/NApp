@@ -7,7 +7,8 @@ interface Repository {
     suspend fun getProducts(
         query: String = "",
         page: Int = 1,
-        pageSize: Int = 20
+        pageSize: Int = 20,
+        category: String? = null
     ): List<Product>
 
     suspend fun getCategories(): List<Category>

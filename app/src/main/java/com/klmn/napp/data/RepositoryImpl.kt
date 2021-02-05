@@ -6,10 +6,8 @@ import com.klmn.napp.data.cache.entities.CategoryCacheMapper
 import com.klmn.napp.data.cache.DAO
 import com.klmn.napp.data.network.OpenFoodFactsAPI
 import com.klmn.napp.data.network.PixabayAPI
-import com.klmn.napp.data.network.entities.NetworkEntities
 import com.klmn.napp.data.network.entities.ProductNetworkMapper
 import com.klmn.napp.model.Category
-import kotlin.reflect.full.declaredMemberProperties
 
 class RepositoryImpl(
     private val context: Context,
@@ -17,22 +15,25 @@ class RepositoryImpl(
     private val openFoodFactsAPI: OpenFoodFactsAPI,
     private val pixabayAPI: PixabayAPI
 ) : Repository {
-    private val fieldsQuery = NetworkEntities.Product::class.declaredMemberProperties
-        .map { it.name }
-        .reduce { a, b -> "$a,$b" }
-
-    override suspend fun getProducts(query: String, page: Int, pageSize: Int) =
-        openFoodFactsAPI.getProducts(
-            query,
-            fieldsQuery,
-            page,
-            pageSize
-        ).let { response ->
-            if (response.isSuccessful) response.body()?.products?.mapNotNull {
-                ProductNetworkMapper.toModel(it)
-            } ?: listOf()
-            else throw RuntimeException(response.errorBody()?.string()) // blocking but who cares
-        }
+    override suspend fun getProducts(
+        query: String,
+        page: Int,
+        pageSize: Int,
+        category: String?
+    ) = openFoodFactsAPI.getProducts(
+        query,
+        page,
+        pageSize,
+        if (category != null) OpenFoodFactsAPI.searchOptions(
+            OpenFoodFactsAPI.OrderBy.DATE_MODIFIED,
+            Triple("categories", "beverages", true)
+        ) else OpenFoodFactsAPI.searchOptions(OpenFoodFactsAPI.OrderBy.DATE_MODIFIED)
+    ).let { response ->
+        if (response.isSuccessful) response.body()?.products?.mapNotNull {
+            ProductNetworkMapper.toModel(it)
+        } ?: listOf()
+        else throw RuntimeException(response.errorBody()?.string()) // blocking but who cares
+    }
 
     override suspend fun getCategories() = dao.getCategories().let { cachedCategories ->
         if (cachedCategories.isEmpty()) {

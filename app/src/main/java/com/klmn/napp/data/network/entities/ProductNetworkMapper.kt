@@ -16,7 +16,7 @@ object ProductNetworkMapper : EntityModelMapper<NetworkEntities.Product, Product
             ?: return null
         return Product(
             entity.product_name ?: return null,
-            quantity?.toInt() ?: return null,
+            quantity ?: return null,
             unit,
             entity.image_small_url,
             entity.ingredients_analysis_tags?.contains("en:vegan") ?: false,

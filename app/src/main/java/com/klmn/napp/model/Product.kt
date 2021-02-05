@@ -4,7 +4,7 @@ data class Product(
     /* name of the product */
     val name: String,
     /* quantity of food in a product, measured in unit */
-    val quantity: Int,
+    val quantity: Float,
     /* measurement unit of food */
     val unit: String,
     /* url of an image of the product */

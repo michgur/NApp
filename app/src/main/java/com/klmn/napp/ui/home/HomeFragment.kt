@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.klmn.napp.R
 import com.klmn.napp.databinding.FragmentHomeBinding
 import com.klmn.napp.databinding.LayoutCategoryBinding
@@ -34,6 +35,12 @@ class HomeFragment : ViewBoundFragment<FragmentHomeBinding>(FragmentHomeBinding:
         Unit
     }
 
+    private fun onCategoryClick(category: Category) {
+        HomeFragmentDirections.actionHomeFragmentToSearchFragment(
+            category = category.name
+        ).let { findNavController().navigate(it) }
+    }
+
     private val productAdapter = productListAdapter()
     private val categoryAdapter = listAdapter(
         diffCallback { it.name },
@@ -43,5 +50,8 @@ class HomeFragment : ViewBoundFragment<FragmentHomeBinding>(FragmentHomeBinding:
             loadImage(url, R.drawable.ic_product, imageView)
         }
         nameTextView.text = category.name
+        root.setOnClickListener {
+            onCategoryClick(category)
+        }
     }
 }
