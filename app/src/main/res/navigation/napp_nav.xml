@@ -30,6 +30,7 @@
 
         <argument
             android:name="category"
+            android:defaultValue="@null"
             app:argType="string"
             app:nullable="true" />
 

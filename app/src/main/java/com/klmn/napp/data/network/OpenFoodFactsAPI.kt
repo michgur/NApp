@@ -32,6 +32,27 @@ interface OpenFoodFactsAPI {
         const val DATE_MODIFIED = "last_modified_t"
     }
 
+    enum class Criteria(private val criterion: String) {
+        BRANDS("brands"),
+        CATEGORIES("categories"),
+        PACKAGING("packaging"),
+        LABELS("labels"),
+        ORIGINS("origins"),
+        MANUFACTURING_PLACES("manufacturing_places"),
+        EMB_CODES("emb_codes"),
+        PURCHASE_PLACES("purchase_places"),
+        STORES("stores"),
+        COUNTRIES("countries"),
+        ADDITIVES("additives"),
+        ALLERGENS("allergens"),
+        TRACES("traces"),
+        NUTRITION_GRADES("nutrition_grades"),
+        STATE("states");
+
+        operator fun invoke(value: String, contains: Boolean = true) =
+            Triple(criterion, value, contains)
+    }
+
     companion object {
         fun searchOptions(
             order: String? = null,

@@ -7,12 +7,14 @@ import android.view.Menu
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toolbar
 import androidx.appcompat.app.ActionBar
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.klmn.napp.R
+import com.klmn.napp.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 /*
@@ -28,19 +30,19 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
+    private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
-    private lateinit var searchBar: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         navController = findNavController(R.id.fragment_container_view)
-        initActionBar(supportActionBar)
 
-        searchBar.setOnEditorActionListener(this)
+        binding.searchEditText.setOnEditorActionListener(this)
         navController.addOnDestinationChangedListener { _, _, arguments ->
-            arguments?.getString("query")?.let(searchBar::setText)
+            arguments?.getString("query")?.let(binding.searchEditText::setText)
         }
     }
 
@@ -48,14 +50,6 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
 
     override fun onPrepareOptionsMenu(menu: Menu?) = false
     override fun onCreateOptionsMenu(menu: Menu?) = false
-
-    private fun initActionBar(actionBar: ActionBar?) = actionBar?.apply {
-        setDisplayShowCustomEnabled(true)
-        setDisplayShowTitleEnabled(false)
-        setDisplayShowHomeEnabled(false)
-        setCustomView(R.layout.layout_search)
-        searchBar = customView as EditText
-    }
 
     override fun onEditorAction(textView: TextView?, actionId: Int, event: KeyEvent?): Boolean {
         if (actionId == EditorInfo.IME_ACTION_DONE) navController.navigate(
