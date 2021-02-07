@@ -29,10 +29,20 @@
             app:argType="string" />
 
         <argument
-            android:name="category"
+            android:name="filters"
             android:defaultValue="@null"
-            app:argType="string"
+            app:argType="com.klmn.napp.model.Filter[]"
             app:nullable="true" />
 
+        <action
+            android:id="@+id/action_searchFragment_to_filterDialogFragment"
+            app:destination="@id/filterDialogFragment" />
+
     </fragment>
+
+    <dialog
+        android:id="@+id/filterDialogFragment"
+        android:name="com.klmn.napp.ui.search.FilterDialogFragment"
+        android:label="FilterDialogFragment"
+        tools:layout="@layout/layout_filter" />
 </navigation>

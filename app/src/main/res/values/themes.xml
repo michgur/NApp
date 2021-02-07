@@ -42,4 +42,8 @@
         <item name="android:textColor">?attr/colorOnBackground</item>
         <item name="android:textSize">10sp</item>
     </style>
+    <style name="TextAppearance.NApp.Subtitle3">
+        <item name="android:textColor">?attr/colorOnBackground</item>
+        <item name="android:textSize">16sp</item>
+    </style>
 </resources>

@@ -1,0 +1,70 @@
+package com.klmn.napp.ui.search
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import androidx.fragment.app.DialogFragment
+import androidx.navigation.fragment.findNavController
+import com.klmn.napp.R
+import com.klmn.napp.databinding.LayoutFilterBinding
+import com.klmn.napp.model.Filter
+
+class FilterDialogFragment : DialogFragment() {
+    private var _binding: LayoutFilterBinding? = null
+    private val binding get() = _binding!!
+
+    private lateinit var criteria: Array<String>
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = LayoutFilterBinding.inflate(inflater, container, false)
+
+        criteria = resources.getStringArray(R.array.criteria_ids)
+
+        ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.criteria_names,
+            android.R.layout.simple_spinner_item
+        ).let { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.criteriaSpinner.adapter = adapter
+        }
+
+        binding.containsSwitch.setOnClickListener {
+            binding.containsText.setText(
+                if (binding.containsSwitch.isChecked) R.string.filter_contains
+                else R.string.filter_doesnt_contain
+            )
+        }
+
+        binding.cancelButton.setOnClickListener {
+            dismiss()
+        }
+        binding.doneButton.setOnClickListener {
+            onActionDone()
+        }
+
+        return binding.root
+    }
+
+    private fun onActionDone() = Filter(
+        criteria[binding.criteriaSpinner.selectedItemPosition],
+        binding.filterText.text.toString(),
+        binding.containsSwitch.isChecked
+    ).let { filter ->
+        findNavController().previousBackStackEntry
+            ?.savedStateHandle
+            ?.set("filter", filter)
+        dismiss()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+}

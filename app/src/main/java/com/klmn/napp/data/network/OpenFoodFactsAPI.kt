@@ -1,6 +1,7 @@
 package com.klmn.napp.data.network
 
 import com.klmn.napp.data.network.entities.NetworkEntities
+import com.klmn.napp.model.Filter
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -32,37 +33,34 @@ interface OpenFoodFactsAPI {
         const val DATE_MODIFIED = "last_modified_t"
     }
 
-    enum class Criteria(private val criterion: String) {
-        BRANDS("brands"),
-        CATEGORIES("categories"),
-        PACKAGING("packaging"),
-        LABELS("labels"),
-        ORIGINS("origins"),
-        MANUFACTURING_PLACES("manufacturing_places"),
-        EMB_CODES("emb_codes"),
-        PURCHASE_PLACES("purchase_places"),
-        STORES("stores"),
-        COUNTRIES("countries"),
-        ADDITIVES("additives"),
-        ALLERGENS("allergens"),
-        TRACES("traces"),
-        NUTRITION_GRADES("nutrition_grades"),
-        STATE("states");
-
-        operator fun invoke(value: String, contains: Boolean = true) =
-            Triple(criterion, value, contains)
+    object Criteria {
+        const val BRANDS = "brands"
+        const val CATEGORIES = "categories"
+        const val PACKAGING = "packaging"
+        const val LABELS = "labels"
+        const val ORIGINS = "origins"
+        const val MANUFACTURING_PLACES = "manufacturing_places"
+        const val EMB_CODES = "emb_codes"
+        const val PURCHASE_PLACES = "purchase_places"
+        const val STORES = "stores"
+        const val COUNTRIES = "countries"
+        const val ADDITIVES = "additives"
+        const val ALLERGENS = "allergens"
+        const val TRACES = "traces"
+        const val NUTRITION_GRADES = "nutrition_grades"
+        const val STATE = "states"
     }
 
     companion object {
         fun searchOptions(
             order: String? = null,
-            vararg criteria: Triple<String, String, Boolean>
+            filters: Iterable<Filter>?
         ) = hashMapOf("fields" to fields).also { query ->
             order?.let { query["sort_by"] = order }
-            criteria.forEachIndexed { i, crit ->
-                query["tagtype_$i"] = crit.first
-                query["tag_$i"] = crit.second
-                query["tag_contains_$i"] = if (crit.third) "contains" else "does_not_contain"
+            filters?.forEachIndexed { i, filter ->
+                query["tagtype_$i"] = filter.criterion
+                query["tag_$i"] = filter.value
+                query["tag_contains_$i"] = if (filter.contains) "contains" else "does_not_contain"
             }
         }
     }

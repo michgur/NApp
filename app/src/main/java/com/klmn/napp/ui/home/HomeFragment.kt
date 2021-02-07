@@ -6,9 +6,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.klmn.napp.R
+import com.klmn.napp.data.network.OpenFoodFactsAPI
+import com.klmn.napp.data.network.OpenFoodFactsAPI.Criteria.CATEGORIES
 import com.klmn.napp.databinding.FragmentHomeBinding
 import com.klmn.napp.databinding.LayoutCategoryBinding
 import com.klmn.napp.model.Category
+import com.klmn.napp.model.Filter
 import com.klmn.napp.ui.components.productListAdapter
 import com.klmn.napp.util.ViewBoundFragment
 import com.klmn.napp.util.diffCallback
@@ -37,7 +40,7 @@ class HomeFragment : ViewBoundFragment<FragmentHomeBinding>(FragmentHomeBinding:
 
     private fun onCategoryClick(category: Category) {
         HomeFragmentDirections.actionHomeFragmentToSearchFragment(
-            category = category.id
+            filters = arrayOf(Filter(CATEGORIES, category.id))
         ).let { findNavController().navigate(it) }
     }
 

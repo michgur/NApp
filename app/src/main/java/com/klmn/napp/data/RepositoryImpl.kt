@@ -8,6 +8,7 @@ import com.klmn.napp.data.network.OpenFoodFactsAPI
 import com.klmn.napp.data.network.PixabayAPI
 import com.klmn.napp.data.network.entities.ProductNetworkMapper
 import com.klmn.napp.model.Category
+import com.klmn.napp.model.Filter
 
 class RepositoryImpl(
     private val context: Context,
@@ -19,15 +20,15 @@ class RepositoryImpl(
         query: String,
         page: Int,
         pageSize: Int,
-        category: String?
+        filters: Iterable<Filter>?
     ) = openFoodFactsAPI.getProducts(
         query,
         page,
         pageSize,
-        if (category != null) OpenFoodFactsAPI.searchOptions(
+        OpenFoodFactsAPI.searchOptions(
             OpenFoodFactsAPI.OrderBy.DATE_MODIFIED,
-            OpenFoodFactsAPI.Criteria.CATEGORIES(category)
-        ) else OpenFoodFactsAPI.searchOptions(OpenFoodFactsAPI.OrderBy.DATE_MODIFIED)
+            filters
+        )
     ).let { response ->
         if (response.isSuccessful) response.body()?.products?.mapNotNull {
             ProductNetworkMapper.toModel(it)

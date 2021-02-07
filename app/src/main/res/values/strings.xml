@@ -7,4 +7,10 @@
     <string name="categories">Categories</string>
     <string name="categories_subtitle">Find Products in Specific Categories</string>
     <string name="energy_unit">kcal</string>
+    <string name="filter_value">value</string>
+    <string name="filter_contains">Contains</string>
+    <string name="filter_doesnt_contain">Does Not Contain</string>
+    <string name="done">DONE</string>
+    <string name="filter_title">Filter Products By Criteria</string>
+    <string name="cancel">CANCEL</string>
 </resources>

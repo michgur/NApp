@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="criteria_ids">
+        <item>brands</item>
+        <item>categories</item>
+        <item>packaging</item>
+        <item>labels</item>
+        <item>origins</item>
+        <item>manufacturing_places</item>
+        <item>emb_codes</item>
+        <item>stores</item>
+        <item>countries</item>
+        <item>additives</item>
+        <item>allergens</item>
+        <item>traces</item>
+        <item>nutrition_grades</item>
+        <item>states</item>
+    </string-array>
+    <string-array name="criteria_names">
+        <item>Brand</item>
+        <item>Category</item>
+        <item>Packaging</item>
+        <item>Label</item>
+        <item>Origins</item>
+        <item>Manufacturer</item>
+        <item>Packager Code</item>
+        <item>Store</item>
+        <item>Country</item>
+        <item>Additive</item>
+        <item>Allergen</item>
+        <item>Traces</item>
+        <item>Nutrition Grade</item>
+        <item>State</item>
+    </string-array>
+</resources>
