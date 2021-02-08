@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -28,7 +29,9 @@ class SearchFragment : ViewBoundFragment<FragmentSearchBinding>(FragmentSearchBi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
         lifecycleScope.launchWhenStarted {
-            viewModel.products.collect(productAdapter::submitList)
+            viewModel.products.collect { products ->
+                productAdapter.submitList(products)
+            }
         }
         lifecycleScope.launchWhenStarted {
             viewModel.filters.collect(filterAdapter::submitFilters)
@@ -40,6 +43,13 @@ class SearchFragment : ViewBoundFragment<FragmentSearchBinding>(FragmentSearchBi
                     e.message,
                     Toast.LENGTH_SHORT
                 ).show()
+            }
+        }
+        lifecycleScope.launchWhenStarted {
+            viewModel.loading.collect {
+                progressBar.isVisible = it
+                // if still loading / successfully loaded products hide empty text
+                emptyText.isVisible = !(it || viewModel.products.value.isNotEmpty())
             }
         }
 
