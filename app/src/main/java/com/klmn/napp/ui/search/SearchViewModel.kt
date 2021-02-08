@@ -23,12 +23,11 @@ class SearchViewModel @Inject constructor(
     private val _loading = MutableStateFlow(false)
     val loading get() = _loading.asStateFlow()
 
-    private var page = 1
-    private var query = ""
-    //  unrelated- bottom bar home / search / menu / settings or smth
-    //          also design the individual product fragment in xd
     private var _filters = MutableStateFlow(listOf<Filter>())
     val filters get() = _filters.asStateFlow()
+
+    private var page = 1
+    private var query = ""
 
     companion object { const val PAGE_SIZE = 20 }
 
@@ -65,6 +64,7 @@ class SearchViewModel @Inject constructor(
         updateProducts()
     }
 
+    // fixme pagination is janky AF
     private fun updateProducts() = viewModelScope.launch {
         _products.value += repository.getProducts(query, page, PAGE_SIZE, filters.value)
     }

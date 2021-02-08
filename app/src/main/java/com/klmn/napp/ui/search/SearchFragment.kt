@@ -2,15 +2,14 @@ package com.klmn.napp.ui.search
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.children
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.klmn.napp.R
 import com.klmn.napp.databinding.FragmentSearchBinding
 import com.klmn.napp.model.Filter
 import com.klmn.napp.ui.components.FilterChip
+import com.klmn.napp.ui.components.FilterChipGroupAdapter
 import com.klmn.napp.ui.components.productListAdapter
 import com.klmn.napp.util.ViewBoundFragment
 import com.klmn.napp.util.doOnScroll
@@ -23,8 +22,7 @@ class SearchFragment : ViewBoundFragment<FragmentSearchBinding>(FragmentSearchBi
     private val args: SearchFragmentArgs by navArgs()
 
     private val productAdapter = productListAdapter()
-
-    private val chips = mutableMapOf<String, FilterChip>()
+    private val filterAdapter = FilterChipGroupAdapter()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
         productsRecyclerView.adapter = productAdapter
@@ -34,15 +32,7 @@ class SearchFragment : ViewBoundFragment<FragmentSearchBinding>(FragmentSearchBi
             viewModel.products.collect(productAdapter::submitList)
         }
         lifecycleScope.launchWhenStarted {
-            viewModel.filters.collect { filters ->
-                for (filter in filters) filter.criterion.let {
-                    chips[it] ?: createChip(it)
-                }.filter = filter
-
-                chips.values.filter { chip ->
-                    chip.filter !in filters
-                }.forEach(::removeChip)
-            }
+            viewModel.filters.collect(filterAdapter::submitFilters)
         }
 
         findNavController().currentBackStackEntry
@@ -54,45 +44,27 @@ class SearchFragment : ViewBoundFragment<FragmentSearchBinding>(FragmentSearchBi
 
         viewModel.search(args.query, args.filters?.toList())
 
-        binding.chipGroup.children.forEach { child ->
-            (child as? FilterChip)?.let(::initChip)
+        filterAdapter.apply {
+            setOnFilterChipClickListener {
+                (it as? FilterChip)?.let(::editFilter)
+            }
+            setOnFilterChipCloseIconClickListener {
+                (it as? FilterChip)?.let(::removeFilter)
+            }
+
+            attach(binding.chipGroup)
         }
 
         binding.addChip.setOnClickListener {
-            findNavController().navigate(
-                SearchFragmentDirections.actionSearchFragmentToFilterDialogFragment()
-            )
+            editFilter()
         }
     }
 
-    private fun initChip(chip: FilterChip) = chip.apply {
-        setOnClickListener {
-            SearchFragmentDirections.actionSearchFragmentToFilterDialogFragment(
-                filter ?: criterion?.let { Filter(it, "") }
-            ).let(findNavController()::navigate)
-        }
-        setOnCloseIconClickListener {
-            filter?.let(viewModel::removeFilter)
-        }
-        (filter?.criterion ?: criterion)?.let { chips[it] = this }
-    }
+    // open filter dialog with an optional preexisting filter to edit
+    private fun editFilter(chip: FilterChip? = null) =
+        SearchFragmentDirections.actionSearchFragmentToFilterDialogFragment(
+            chip?.filter ?: chip?.criterion?.let { Filter(it, "") }
+        ).let(findNavController()::navigate)
 
-    private fun createChip(criterion: String) = FilterChip(
-        requireContext(),
-        null,
-        R.attr.filterChipStyle
-    ).also { chip ->
-        binding.chipGroup.addView(chip)
-        chip.criterion = criterion
-        initChip(chip)
-    }
-
-    // TODO: create a custom chipGroup class / adapter class
-    private fun removeChip(chip: FilterChip) {
-        if (chip.criterion != null) chip.clearFilter()
-        else {
-            chips.remove(chip.filter?.criterion)
-            binding.chipGroup.removeView(chip)
-        }
-    }
+    private fun removeFilter(chip: FilterChip) = chip.filter?.let(viewModel::removeFilter)
 }
