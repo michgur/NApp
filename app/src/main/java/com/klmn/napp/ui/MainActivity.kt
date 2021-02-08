@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
 
         binding.searchEditText.setOnEditorActionListener(this)
         navController.addOnDestinationChangedListener { _, _, arguments ->
-            arguments?.getString("query")?.let(binding.searchEditText::setText)
+            binding.searchEditText.setText(arguments?.getString("query"))
         }
     }
 

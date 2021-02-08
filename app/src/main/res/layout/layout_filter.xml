@@ -52,7 +52,6 @@
         android:id="@+id/contains_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:checked="true"
         app:layout_constraintBottom_toBottomOf="@id/contains_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/contains_text" />

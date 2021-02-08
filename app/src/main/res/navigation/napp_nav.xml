@@ -44,5 +44,13 @@
         android:id="@+id/filterDialogFragment"
         android:name="com.klmn.napp.ui.search.FilterDialogFragment"
         android:label="FilterDialogFragment"
-        tools:layout="@layout/layout_filter" />
+        tools:layout="@layout/layout_filter">
+
+        <argument
+            android:name="filter"
+            android:defaultValue="@null"
+            app:argType="com.klmn.napp.model.Filter"
+            app:nullable="true" />
+
+    </dialog>
 </navigation>

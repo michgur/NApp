@@ -1,27 +1,21 @@
 package com.klmn.napp.ui.search
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.children
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.chip.Chip
 import com.klmn.napp.R
-import com.klmn.napp.data.network.OpenFoodFactsAPI
-import com.klmn.napp.data.network.OpenFoodFactsAPI.Criteria.ALLERGENS
-import com.klmn.napp.data.network.OpenFoodFactsAPI.Criteria.BRANDS
-import com.klmn.napp.data.network.OpenFoodFactsAPI.Criteria.CATEGORIES
-import com.klmn.napp.data.network.OpenFoodFactsAPI.Criteria.COUNTRIES
 import com.klmn.napp.databinding.FragmentSearchBinding
 import com.klmn.napp.model.Filter
+import com.klmn.napp.ui.components.FilterChip
 import com.klmn.napp.ui.components.productListAdapter
 import com.klmn.napp.util.ViewBoundFragment
 import com.klmn.napp.util.doOnScroll
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import java.util.*
 
 @AndroidEntryPoint
 class SearchFragment : ViewBoundFragment<FragmentSearchBinding>(FragmentSearchBinding::inflate) {
@@ -30,7 +24,7 @@ class SearchFragment : ViewBoundFragment<FragmentSearchBinding>(FragmentSearchBi
 
     private val productAdapter = productListAdapter()
 
-    private val chips = mutableMapOf<String, Chip>()
+    private val chips = mutableMapOf<String, FilterChip>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
         productsRecyclerView.adapter = productAdapter
@@ -41,13 +35,13 @@ class SearchFragment : ViewBoundFragment<FragmentSearchBinding>(FragmentSearchBi
         }
         lifecycleScope.launchWhenStarted {
             viewModel.filters.collect { filters ->
-                for (filter in filters)
-                    chips[filter.criterion]?.apply {
-                        text = filter.value
-                        setChipBackgroundColorResource(R.color.yellow_a400)
-                        chipStrokeWidth = 1f
-                        setChipStrokeColorResource(R.color.black)
-                    }
+                for (filter in filters) filter.criterion.let {
+                    chips[it] ?: createChip(it)
+                }.filter = filter
+
+                chips.values.filter { chip ->
+                    chip.filter !in filters
+                }.forEach(::removeChip)
             }
         }
 
@@ -60,19 +54,45 @@ class SearchFragment : ViewBoundFragment<FragmentSearchBinding>(FragmentSearchBi
 
         viewModel.search(args.query, args.filters?.toList())
 
-        for (crit in listOf(CATEGORIES, COUNTRIES, ALLERGENS, BRANDS)) {
-            Chip(requireContext()).apply {
-                text = crit.toLowerCase(Locale.ROOT).capitalize(Locale.ROOT)
-                setTextColor(Color.BLACK)
-                setEnsureMinTouchTargetSize(false)
-                setChipBackgroundColorResource(R.color.yellow_a700)
-                setOnClickListener {
-                    findNavController().navigate(R.id.action_searchFragment_to_filterDialogFragment)
-                }
-            }.let {
-                chips[crit] = it
-                chipGroup.addView(it)
-            }
+        binding.chipGroup.children.forEach { child ->
+            (child as? FilterChip)?.let(::initChip)
+        }
+
+        binding.addChip.setOnClickListener {
+            findNavController().navigate(
+                SearchFragmentDirections.actionSearchFragmentToFilterDialogFragment()
+            )
+        }
+    }
+
+    private fun initChip(chip: FilterChip) = chip.apply {
+        setOnClickListener {
+            SearchFragmentDirections.actionSearchFragmentToFilterDialogFragment(
+                filter ?: criterion?.let { Filter(it, "") }
+            ).let(findNavController()::navigate)
+        }
+        setOnCloseIconClickListener {
+            filter?.let(viewModel::removeFilter)
+        }
+        (filter?.criterion ?: criterion)?.let { chips[it] = this }
+    }
+
+    private fun createChip(criterion: String) = FilterChip(
+        requireContext(),
+        null,
+        R.attr.filterChipStyle
+    ).also { chip ->
+        binding.chipGroup.addView(chip)
+        chip.criterion = criterion
+        initChip(chip)
+    }
+
+    // TODO: create a custom chipGroup class / adapter class
+    private fun removeChip(chip: FilterChip) {
+        if (chip.criterion != null) chip.clearFilter()
+        else {
+            chips.remove(chip.filter?.criterion)
+            binding.chipGroup.removeView(chip)
         }
     }
 }

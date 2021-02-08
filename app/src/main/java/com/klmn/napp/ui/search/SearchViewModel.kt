@@ -25,10 +25,6 @@ class SearchViewModel @Inject constructor(
 
     private var page = 1
     private var query = ""
-    // TODO:
-    //      filters shouldnt create new fragments on change,
-    //      instead make this a stateFlow and bind to chipGroup
-    //      also then figure out chip ux design
     //  unrelated- bottom bar home / search / menu / settings or smth
     //          also design the individual product fragment in xd
     private var _filters = MutableStateFlow(listOf<Filter>())
@@ -38,6 +34,12 @@ class SearchViewModel @Inject constructor(
 
     fun addFilter(filter: Filter) {
         _filters.value += filter
+        resetProducts()
+        updateProducts()
+    }
+
+    fun removeFilter(filter: Filter) {
+        _filters.value -= filter
         resetProducts()
         updateProducts()
     }

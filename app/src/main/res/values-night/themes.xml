@@ -15,6 +15,7 @@
         <!-- Customize your theme here. -->
         <item name="android:colorBackground">@color/grey_900</item>
         <item name="actionBarStyle">@style/Widget.NApp.ActionBar</item>
+        <item name="filterChipStyle">@style/Widget.NApp.FilterChip</item>
     </style>
 
     <style name="Widget.NApp.ActionBar" parent="Widget.AppCompat.ActionBar">

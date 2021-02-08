@@ -30,7 +30,51 @@
                     android:clipToPadding="false"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    app:singleLine="true" />
+                    app:singleLine="true">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/add_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        app:chipBackgroundColor="?attr/colorPrimaryVariant"
+                        app:chipIcon="@drawable/ic_add"
+                        app:chipIconTint="?attr/colorOnPrimary"
+                        app:ensureMinTouchTargetSize="false"
+                        app:chipStartPadding="4dp"
+                        app:chipEndPadding="4dp"
+                        app:textEndPadding="0dp"
+                        app:textStartPadding="0dp" />
+
+                    <com.klmn.napp.ui.components.FilterChip
+                        style="@style/Widget.NApp.FilterChip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:criterion="categories"
+                        app:label="Categories" />
+
+                    <com.klmn.napp.ui.components.FilterChip
+                        style="@style/Widget.NApp.FilterChip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:criterion="countries"
+                        app:label="Countries" />
+
+                    <com.klmn.napp.ui.components.FilterChip
+                        style="@style/Widget.NApp.FilterChip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:criterion="allergens"
+                        app:label="Allergens" />
+
+                    <com.klmn.napp.ui.components.FilterChip
+                        style="@style/Widget.NApp.FilterChip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:criterion="brands"
+                        app:label="Brands" />
+
+                </com.google.android.material.chip.ChipGroup>
 
             </HorizontalScrollView>
 
