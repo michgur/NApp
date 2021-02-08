@@ -1,5 +1,6 @@
 package com.klmn.napp.ui.search
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,6 +10,7 @@ import com.klmn.napp.model.Product
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,6 +19,11 @@ class SearchViewModel @Inject constructor(
     private val repository: Repository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+    companion object {
+        const val TAG = "searchViewModel"
+        const val PAGE_SIZE = 20
+    }
+
     private val _products = MutableStateFlow(listOf<Product>())
     val products get() = _products.asStateFlow()
 
@@ -26,27 +33,28 @@ class SearchViewModel @Inject constructor(
     private var _filters = MutableStateFlow(listOf<Filter>())
     val filters get() = _filters.asStateFlow()
 
+    private var _errors = MutableStateFlow<Exception?>(null)
+    val errors get() = _errors.filterNotNull()
+
     private var page = 1
     private var query = ""
 
-    companion object { const val PAGE_SIZE = 20 }
-
     fun addFilter(filter: Filter) {
         _filters.value += filter
-        resetProducts()
+        clearProducts()
         updateProducts()
     }
 
     fun removeFilter(filter: Filter) {
         _filters.value -= filter
-        resetProducts()
+        clearProducts()
         updateProducts()
     }
 
     fun search(query: String? = null, filters: List<Filter>? = null) {
         query?.let { this.query = it }
         filters?.let { _filters.value = it }
-        resetProducts()
+        clearProducts()
         updateProducts()
     }
 
@@ -54,7 +62,8 @@ class SearchViewModel @Inject constructor(
         if (!loading.value && pos + 1 >= products.value.size) nextPage()
     }
 
-    private fun resetProducts() {
+    private fun clearProducts() {
+        Log.d(TAG, "clearing products")
         page = 1
         _products.value = listOf()
     }
@@ -64,8 +73,16 @@ class SearchViewModel @Inject constructor(
         updateProducts()
     }
 
-    // fixme pagination is janky AF
     private fun updateProducts() = viewModelScope.launch {
-        _products.value += repository.getProducts(query, page, PAGE_SIZE, filters.value)
+        try {
+            Log.d(TAG, "fetching products (query=$query, page=$page, filters=${filters.value})")
+            _loading.value = true
+            _products.value += repository.getProducts(query, page, PAGE_SIZE, filters.value)
+        } catch (e: Exception) {
+            Log.e(TAG, e.stackTraceToString())
+            _errors.value = e
+        } finally {
+            _loading.value = false
+        }
     }
 }

@@ -2,6 +2,8 @@ package com.klmn.napp.ui.search
 
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -25,24 +27,40 @@ class SearchFragment : ViewBoundFragment<FragmentSearchBinding>(FragmentSearchBi
     private val filterAdapter = FilterChipGroupAdapter()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
-        productsRecyclerView.adapter = productAdapter
-        productsRecyclerView.doOnScroll(viewModel::onScroll)
-
         lifecycleScope.launchWhenStarted {
             viewModel.products.collect(productAdapter::submitList)
         }
         lifecycleScope.launchWhenStarted {
             viewModel.filters.collect(filterAdapter::submitFilters)
         }
+        lifecycleScope.launchWhenStarted {
+            viewModel.errors.collect { e ->
+                Toast.makeText(
+                    requireContext(),
+                    e.message,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
 
+        // receive filters from filterDialogFragments
         findNavController().currentBackStackEntry
             ?.savedStateHandle
             ?.getLiveData<Filter>("filter")
-            ?.observe(viewLifecycleOwner) { filter ->
-                viewModel.addFilter(filter)
-            }
+            ?.observe(viewLifecycleOwner, viewModel::addFilter)
 
         viewModel.search(args.query, args.filters?.toList())
+
+        toolbar.searchEditText.apply {
+            setText(args.query)
+            setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) onSearch()
+                true
+            }
+        }
+
+        productsRecyclerView.adapter = productAdapter
+        productsRecyclerView.doOnScroll(viewModel::onScroll)
 
         filterAdapter.apply {
             setOnFilterChipClickListener {
@@ -52,10 +70,10 @@ class SearchFragment : ViewBoundFragment<FragmentSearchBinding>(FragmentSearchBi
                 (it as? FilterChip)?.let(::removeFilter)
             }
 
-            attach(binding.chipGroup)
+            attach(chipGroup)
         }
 
-        binding.addChip.setOnClickListener {
+        addChip.setOnClickListener {
             editFilter()
         }
     }
@@ -67,4 +85,13 @@ class SearchFragment : ViewBoundFragment<FragmentSearchBinding>(FragmentSearchBi
         ).let(findNavController()::navigate)
 
     private fun removeFilter(chip: FilterChip) = chip.filter?.let(viewModel::removeFilter)
+
+    private fun onSearch() {
+        SearchFragmentDirections.actionSearchFragmentSelf(
+            binding.toolbar.searchEditText.text?.toString() ?: "",
+            viewModel.filters.value.toTypedArray()
+        ).let(findNavController()::navigate)
+
+        binding.toolbar.searchEditText.setText(args.query)
+    }
 }

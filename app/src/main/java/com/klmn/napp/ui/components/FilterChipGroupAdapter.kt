@@ -6,7 +6,10 @@ import com.google.android.material.chip.ChipGroup
 import com.klmn.napp.R
 import com.klmn.napp.model.Filter
 
-/* a class that manages a chipGroup of filterChips & can match it to filter lists */
+/*
+* a class that manages a chipGroup of filterChips & can match it to filter lists.
+* the chip group can also have chips w/out a filter that prompt the user to create one
+* */
 class FilterChipGroupAdapter {
     private lateinit var chipGroup: ChipGroup
     private val chips = mutableMapOf<String, FilterChip>()

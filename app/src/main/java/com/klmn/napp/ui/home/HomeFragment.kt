@@ -1,12 +1,14 @@
 package com.klmn.napp.ui.home
 
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.klmn.napp.R
-import com.klmn.napp.data.network.OpenFoodFactsAPI
 import com.klmn.napp.data.network.OpenFoodFactsAPI.Criteria.CATEGORIES
 import com.klmn.napp.databinding.FragmentHomeBinding
 import com.klmn.napp.databinding.LayoutCategoryBinding
@@ -35,7 +37,18 @@ class HomeFragment : ViewBoundFragment<FragmentHomeBinding>(FragmentHomeBinding:
             viewModel.categories.collect(categoryAdapter::submitList)
         }
 
-        Unit
+        toolbar.searchEditText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) onSearch()
+            true
+        }
+    }
+
+    private fun onSearch() {
+        HomeFragmentDirections.actionHomeFragmentToSearchFragment(
+            binding.toolbar.searchEditText.text?.toString() ?: ""
+        ).let(findNavController()::navigate)
+
+        binding.toolbar.searchEditText.setText("")
     }
 
     private fun onCategoryClick(category: Category) {

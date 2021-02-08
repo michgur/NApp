@@ -15,6 +15,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.klmn.napp.R
 import com.klmn.napp.databinding.ActivityMainBinding
+import com.klmn.napp.util.hideKeyboard
 import dagger.hilt.android.AndroidEntryPoint
 
 /*
@@ -29,7 +30,7 @@ import dagger.hilt.android.AndroidEntryPoint
 * */
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
+class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
 
@@ -39,23 +40,11 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
         setContentView(binding.root)
 
         navController = findNavController(R.id.fragment_container_view)
-
-        binding.searchEditText.setOnEditorActionListener(this)
-        navController.addOnDestinationChangedListener { _, _, arguments ->
-            binding.searchEditText.setText(arguments?.getString("query"))
-        }
+        navController.addOnDestinationChangedListener { _, _, _ -> hideKeyboard() }
     }
 
     override fun onNavigateUp() = navController.navigateUp() || super.onNavigateUp()
 
     override fun onPrepareOptionsMenu(menu: Menu?) = false
     override fun onCreateOptionsMenu(menu: Menu?) = false
-
-    override fun onEditorAction(textView: TextView?, actionId: Int, event: KeyEvent?): Boolean {
-        if (actionId == EditorInfo.IME_ACTION_DONE) navController.navigate(
-            R.id.searchFragment,
-            bundleOf("query" to (textView?.text?.toString() ?: ""))
-        )
-        return true
-    }
 }

@@ -1,6 +1,7 @@
 
 package com.klmn.napp.ui.search
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.navigation.fragment.navArgs
 import com.klmn.napp.R
 import com.klmn.napp.databinding.LayoutFilterBinding
 import com.klmn.napp.model.Filter
+import com.klmn.napp.util.hideKeyboard
 
 class FilterDialogFragment : DialogFragment() {
     private var _binding: LayoutFilterBinding? = null
@@ -76,6 +78,11 @@ class FilterDialogFragment : DialogFragment() {
         if (contains) R.string.filter_contains
         else R.string.filter_doesnt_contain
     )
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        hideKeyboard()
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

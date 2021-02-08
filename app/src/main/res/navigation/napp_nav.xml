@@ -38,6 +38,10 @@
             android:id="@+id/action_searchFragment_to_filterDialogFragment"
             app:destination="@id/filterDialogFragment" />
 
+        <action
+            android:id="@+id/action_searchFragment_self"
+            app:destination="@id/searchFragment" />
+
     </fragment>
 
     <dialog
