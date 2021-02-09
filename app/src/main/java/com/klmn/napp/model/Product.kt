@@ -1,6 +1,8 @@
 package com.klmn.napp.model
 
 data class Product(
+    /* open-food-facts API id of the product */
+    val id: Long,
     /* name of the product */
     val name: String,
     /* quantity of food in a product, measured in unit */
@@ -18,5 +20,7 @@ data class Product(
     /* amount of protein in 100g of the product */
     val protein: Float,
     /* amount of fat in 100g of the product */
-    val fat: Float
+    val fat: Float,
+    /* additional product labels, i.e. countries, categories, etc. used for complex search */
+    val labels: Map<String, List<String>>
 )

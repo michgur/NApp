@@ -2,11 +2,27 @@ package com.klmn.napp.data.network.entities
 
 object NetworkEntities {
     data class Product(
+        val id: String? = null,
         val product_name: String? = null,
         val quantity: String? = null,
         val ingredients_analysis_tags: List<String>? = null,
         val image_small_url: String = "",
-        val nutriments: Nutriments? = null
+        @ProductLabel val nutriments: Nutriments? = null,
+        @ProductLabel val brands: String? = null,
+        @ProductLabel val categories: String? = null,
+        @ProductLabel val packaging: String? = null,
+        @ProductLabel val labels: String? = null,
+        @ProductLabel val origins: String? = null,
+        @ProductLabel val manufacturing_places: String? = null,
+        @ProductLabel val emb_codes: String? = null,
+        @ProductLabel val purchase_places: String? = null,
+        @ProductLabel val stores: String? = null,
+        @ProductLabel val countries: String? = null,
+        @ProductLabel val additives: String? = null,
+        @ProductLabel val allergens: String? = null,
+        @ProductLabel val traces: String? = null,
+        @ProductLabel val nutrition_grades: String? = null,
+        @ProductLabel val states: String? = null
     )
 
     data class Nutriments(

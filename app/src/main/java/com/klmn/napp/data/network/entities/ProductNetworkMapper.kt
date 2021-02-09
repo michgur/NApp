@@ -4,6 +4,8 @@ import com.klmn.napp.model.Product
 import com.klmn.napp.util.EntityModelMapper
 import com.klmn.napp.util.extractQuantityAndUnit
 import com.klmn.napp.util.fixQuantity
+import kotlin.reflect.full.declaredMemberProperties
+import kotlin.reflect.full.hasAnnotation
 
 /* maps VALID product network entities to models, invalid entities to null */
 object ProductNetworkMapper : EntityModelMapper<NetworkEntities.Product, Product?> {
@@ -15,6 +17,7 @@ object ProductNetworkMapper : EntityModelMapper<NetworkEntities.Product, Product
         val (quantity, unit) = extractQuantityAndUnit(entity.quantity ?: return null)
             ?: return null
         return Product(
+            entity.id?.toLongOrNull() ?: return null,
             entity.product_name ?: return null,
             quantity ?: return null,
             unit,
@@ -35,7 +38,22 @@ object ProductNetworkMapper : EntityModelMapper<NetworkEntities.Product, Product
             fixQuantity(
                 entity.nutriments.fat_100g,
                 entity.nutriments.fat_unit
-            )?.first ?: return null
+            )?.first ?: return null,
+            mutableMapOf<String, List<String>>().also { initLabelsMap(entity, it) }
         )
+    }
+
+    private val labelFields = NetworkEntities.Product::class.declaredMemberProperties.filter {
+        it.hasAnnotation<ProductLabel>()
+    }
+    private fun initLabelsMap(
+        product: NetworkEntities.Product,
+        map: MutableMap<String, List<String>>
+    ) = labelFields.forEach { label ->
+        (label.get(product) as? String).takeUnless {
+            it.isNullOrBlank()
+        }?.let { values ->
+            map[label.name] = values.split(", ")
+        }
     }
 }

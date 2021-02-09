@@ -4,11 +4,13 @@ import android.content.Context
 import com.klmn.napp.R
 import com.klmn.napp.data.cache.entities.CategoryCacheMapper
 import com.klmn.napp.data.cache.DAO
+import com.klmn.napp.data.cache.entities.ProductCacheMapper
 import com.klmn.napp.data.network.OpenFoodFactsAPI
 import com.klmn.napp.data.network.PixabayAPI
 import com.klmn.napp.data.network.entities.ProductNetworkMapper
 import com.klmn.napp.model.Category
 import com.klmn.napp.model.Filter
+import com.klmn.napp.model.Product
 
 class RepositoryImpl(
     private val context: Context,
@@ -21,20 +23,30 @@ class RepositoryImpl(
         page: Int,
         pageSize: Int,
         filters: Iterable<Filter>?
-    ) = openFoodFactsAPI.getProducts(
-        query,
-        page,
-        pageSize,
-        OpenFoodFactsAPI.searchOptions(
-            OpenFoodFactsAPI.OrderBy.DATE_MODIFIED,
-            filters
-        )
-    ).let { response ->
-        if (response.isSuccessful) response.body()?.products?.mapNotNull {
-            ProductNetworkMapper.toModel(it)
-        } ?: listOf()
-        else throw RuntimeException(response.errorBody()?.string()) // blocking but who cares
+    ) = dao.getProducts(query, filters ?: listOf(), "").map {
+        ProductCacheMapper.toModel(it)
     }
+//    override suspend fun getProducts(
+//        query: String,
+//        page: Int,
+//        pageSize: Int,
+//        filters: Iterable<Filter>?
+//    ) = openFoodFactsAPI.getProducts(
+//        query,
+//        page,
+//        pageSize,
+//        OpenFoodFactsAPI.searchOptions(
+//            OpenFoodFactsAPI.OrderBy.DATE_MODIFIED,
+//            filters
+//        )
+//    ).let { response ->
+//        if (response.isSuccessful) response.body()?.products?.mapNotNull {
+//            ProductNetworkMapper.toModel(it)
+//        } ?: listOf()
+//        else throw RuntimeException(response.errorBody()?.string()) // blocking but who cares
+//    }.also { products ->
+//        dao.storeProducts(ProductCacheMapper.toEntityList(products))
+//    }
 
     override suspend fun getCategories() = dao.getCategories().let { cachedCategories ->
         if (cachedCategories.isEmpty()) {
@@ -42,7 +54,7 @@ class RepositoryImpl(
                 c.split("|").let {
                     Category(it[0], it[1], getCategoryImageURL(it[1]))
                 }
-            }.also { dao.addCategories(CategoryCacheMapper.toEntityList(it)) }
+            }.also { dao.storeCategories(CategoryCacheMapper.toEntityList(it)) }
         } else CategoryCacheMapper.toModelList(cachedCategories)
     }
 

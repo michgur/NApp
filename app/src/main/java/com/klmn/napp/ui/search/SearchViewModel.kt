@@ -30,8 +30,6 @@ class SearchViewModel @Inject constructor(
     private val _loading = MutableStateFlow(false)
     val loading get() = _loading.asStateFlow()
 
-    private val _lastPage = MutableStateFlow(false)
-
     private var _filters = MutableStateFlow(listOf<Filter>())
     val filters get() = _filters.asStateFlow()
 
@@ -39,6 +37,7 @@ class SearchViewModel @Inject constructor(
     val errors get() = _errors.filterNotNull()
 
     private var page = 1
+    private var lastPage = false
     private var query = ""
 
     fun addFilter(filter: Filter) {
@@ -62,7 +61,7 @@ class SearchViewModel @Inject constructor(
 
     fun onScroll(pos: Int) {
         if (
-            !_lastPage.value &&
+            !lastPage &&
             !loading.value &&
             pos + 1 >= products.value.size
         ) nextPage()
@@ -72,7 +71,7 @@ class SearchViewModel @Inject constructor(
         Log.d(TAG, "clearing products")
         page = 1
         _products.value = listOf()
-        _lastPage.value = false
+        lastPage = false
     }
 
     private fun nextPage() {
@@ -85,7 +84,7 @@ class SearchViewModel @Inject constructor(
             Log.d(TAG, "fetching products (query=$query, page=$page, filters=${filters.value})")
             _loading.value = true
             repository.getProducts(query, page, PAGE_SIZE, filters.value).let { products ->
-                if (products.isEmpty()) _lastPage.value = true
+                if (products.isEmpty()) lastPage = true
                 else _products.value += products
             }
         } catch (e: Exception) {

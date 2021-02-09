@@ -18,7 +18,7 @@ fun <T, ID> diffCallback(getId: (item: T) -> ID) = object : DiffUtil.ItemCallbac
 }
 
 /*
-* creates a ListAdapter with items of type T & viewHolders of type ViewBoundHolder<T>,
+* creates a ListAdapter with items of type T & viewHolders of type ViewBoundHolder<B>,
 * that inflates bound views for the viewHolders with inflate(),
 * and binds viewHolders to specific items with bind()
 * */
@@ -29,6 +29,21 @@ fun <T, B : ViewBinding> listAdapter(
 ) = object : ListAdapter<T, ViewBoundHolder<B>>(diffCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewBoundHolder(parent, inflate)
+    override fun onBindViewHolder(holder: ViewBoundHolder<B>, position: Int) =
+        holder.binding.bind(currentList[position])
+}
+
+/*
+* creates a ListAdapter with items of type T & viewHolders of type ViewBoundHolder<T>,
+* that creates viewHolders with a custom initializer,
+* and binds viewHolders to specific items with bind()
+* */
+fun <T, B : ViewBinding> listAdapter(
+    diffCallback: DiffUtil.ItemCallback<T>,
+    initialize: (parent: ViewGroup) -> ViewBoundHolder<B>,
+    bind: B.(item: T) -> Unit
+) = object : ListAdapter<T, ViewBoundHolder<B>>(diffCallback) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = initialize(parent)
     override fun onBindViewHolder(holder: ViewBoundHolder<B>, position: Int) =
         holder.binding.bind(currentList[position])
 }
