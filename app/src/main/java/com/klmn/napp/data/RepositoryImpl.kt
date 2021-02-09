@@ -23,30 +23,24 @@ class RepositoryImpl(
         page: Int,
         pageSize: Int,
         filters: Iterable<Filter>?
-    ) = dao.getProducts(query, filters ?: listOf(), "").map {
-        ProductCacheMapper.toModel(it)
-    }
-//    override suspend fun getProducts(
-//        query: String,
-//        page: Int,
-//        pageSize: Int,
-//        filters: Iterable<Filter>?
-//    ) = openFoodFactsAPI.getProducts(
-//        query,
-//        page,
-//        pageSize,
-//        OpenFoodFactsAPI.searchOptions(
-//            OpenFoodFactsAPI.OrderBy.DATE_MODIFIED,
-//            filters
-//        )
-//    ).let { response ->
-//        if (response.isSuccessful) response.body()?.products?.mapNotNull {
-//            ProductNetworkMapper.toModel(it)
-//        } ?: listOf()
-//        else throw RuntimeException(response.errorBody()?.string()) // blocking but who cares
-//    }.also { products ->
-//        dao.storeProducts(ProductCacheMapper.toEntityList(products))
-//    }
+    ) = if (page <= 0) dao.getProducts(query, filters, "").let { products ->
+            ProductCacheMapper.toModelList(products)
+        } else openFoodFactsAPI.getProducts(
+            query,
+            page,
+            pageSize,
+            OpenFoodFactsAPI.searchOptions(
+                OpenFoodFactsAPI.OrderBy.DATE_MODIFIED,
+                filters
+            )
+        ).let { response ->
+            if (response.isSuccessful) response.body()?.products?.mapNotNull {
+                ProductNetworkMapper.toModel(it)
+            } ?: listOf()
+            else throw RuntimeException(response.errorBody()?.string()) // blocking but who cares
+        }.also { products ->
+            dao.storeProducts(ProductCacheMapper.toEntityList(products))
+        }
 
     override suspend fun getCategories() = dao.getCategories().let { cachedCategories ->
         if (cachedCategories.isEmpty()) {

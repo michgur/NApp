@@ -24,7 +24,7 @@ class SearchViewModel @Inject constructor(
         const val PAGE_SIZE = 20
     }
 
-    private val _products = MutableStateFlow(listOf<Product>())
+    private val _products = MutableStateFlow(setOf<Product>())
     val products get() = _products.asStateFlow()
 
     private val _loading = MutableStateFlow(false)
@@ -36,7 +36,7 @@ class SearchViewModel @Inject constructor(
     private var _errors = MutableStateFlow<Exception?>(null)
     val errors get() = _errors.filterNotNull()
 
-    private var page = 1
+    private var page = 0
     private var lastPage = false
     private var query = ""
 
@@ -69,8 +69,8 @@ class SearchViewModel @Inject constructor(
 
     private fun clearProducts() {
         Log.d(TAG, "clearing products")
-        page = 1
-        _products.value = listOf()
+        page = 0
+        _products.value = setOf()
         lastPage = false
     }
 

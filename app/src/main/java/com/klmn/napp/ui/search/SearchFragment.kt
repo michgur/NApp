@@ -30,7 +30,7 @@ class SearchFragment : ViewBoundFragment<FragmentSearchBinding>(FragmentSearchBi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
         lifecycleScope.launchWhenStarted {
             viewModel.products.collect { products ->
-                productAdapter.submitList(products)
+                productAdapter.submitList(products.toList())
             }
         }
         lifecycleScope.launchWhenStarted {
