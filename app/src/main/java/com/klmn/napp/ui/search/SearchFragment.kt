@@ -38,11 +38,7 @@ class SearchFragment : ViewBoundFragment<FragmentSearchBinding>(FragmentSearchBi
         }
         lifecycleScope.launchWhenStarted {
             viewModel.errors.collect { e ->
-                Toast.makeText(
-                    requireContext(),
-                    e.message,
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
             }
         }
         lifecycleScope.launchWhenStarted {
@@ -69,8 +65,10 @@ class SearchFragment : ViewBoundFragment<FragmentSearchBinding>(FragmentSearchBi
             }
         }
 
-        productsRecyclerView.adapter = productAdapter
-        productsRecyclerView.doOnScroll(viewModel::onScroll)
+        productsRecyclerView.apply {
+            adapter = productAdapter
+            doOnScroll(viewModel::onScroll)
+        }
 
         filterAdapter.apply {
             setOnFilterChipClickListener {

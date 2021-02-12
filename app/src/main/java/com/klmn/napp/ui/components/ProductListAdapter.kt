@@ -1,7 +1,9 @@
 package com.klmn.napp.ui.components
 
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.klmn.napp.R
 import com.klmn.napp.databinding.LayoutProductBinding
 import com.klmn.napp.model.Product
@@ -28,7 +30,11 @@ fun Fragment.productListAdapter() = listAdapter(
     veganImageView.isVisible = product.vegan
 
     root.setOnClickListener {
-        root.dispatchSetSelected(true)
+        // root.dispatchSetSelected(true) todo handle marquee
+        findNavController().navigate(
+            R.id.detailsFragment,
+            bundleOf("productId" to product.id)
+        )
     }
 
     product.imageURL?.let {

@@ -20,7 +20,7 @@ class SearchViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     companion object {
-        const val TAG = "searchViewModel"
+        const val TAG = "SearchViewModel"
         const val PAGE_SIZE = 20
     }
 

@@ -13,4 +13,6 @@ interface Repository {
     ): List<Product>
 
     suspend fun getCategories(): List<Category>
+
+    suspend fun findProductById(id: Long): Product
 }

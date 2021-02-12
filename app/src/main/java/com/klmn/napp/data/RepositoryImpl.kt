@@ -1,6 +1,7 @@
 package com.klmn.napp.data
 
 import android.content.Context
+import android.util.Log
 import com.klmn.napp.R
 import com.klmn.napp.data.cache.entities.CategoryCacheMapper
 import com.klmn.napp.data.cache.DAO
@@ -18,12 +19,15 @@ class RepositoryImpl(
     private val openFoodFactsAPI: OpenFoodFactsAPI,
     private val pixabayAPI: PixabayAPI
 ) : Repository {
+    companion object { const val TAG = "RepositoryImpl" }
+
     override suspend fun getProducts(
         query: String,
         page: Int,
         pageSize: Int,
         filters: Iterable<Filter>?
     ) = if (page <= 0) dao.getProducts(query, filters, "").let { products ->
+            Log.d(TAG, "retrieved cached products (query=$query, filters=$filters)")
             ProductCacheMapper.toModelList(products)
         } else openFoodFactsAPI.getProducts(
             query,
@@ -34,13 +38,18 @@ class RepositoryImpl(
                 filters
             )
         ).let { response ->
+            Log.d(TAG, "retrieved network api products (query=$query, page=$page, filters=$filters), success=${response.isSuccessful}")
             if (response.isSuccessful) response.body()?.products?.mapNotNull {
                 ProductNetworkMapper.toModel(it)
             } ?: listOf()
             else throw RuntimeException(response.errorBody()?.string()) // blocking but who cares
         }.also { products ->
+            Log.d(TAG, "caching network products")
             dao.storeProducts(ProductCacheMapper.toEntityList(products))
         }
+
+    override suspend fun findProductById(id: Long) =
+        dao.getProduct(id).let(ProductCacheMapper::toModel)
 
     override suspend fun getCategories() = dao.getCategories().let { cachedCategories ->
         if (cachedCategories.isEmpty()) {

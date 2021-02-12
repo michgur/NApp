@@ -23,6 +23,10 @@ abstract class DAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun storeLabels(labels: List<CacheEntities.Label>)
 
+    @Transaction
+    @Query("SELECT * FROM products WHERE id = :id")
+    abstract suspend fun getProduct(id: Long): CacheEntities.LabeledProduct
+
     @JvmName("storeLabeledProducts")
     suspend fun storeProducts(products: List<CacheEntities.LabeledProduct>) {
         storeProducts(products.map { it.product })
