@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nutrient_card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="5dp"
+    app:strokeColor="?attr/colorDivider"
+    app:strokeWidth="1dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/header_view"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:alpha="0.1"
+            android:background="?attr/colorOnBackground"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/drop_down_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/ic_drop_down"
+            app:layout_constraintEnd_toEndOf="@id/header_view"
+            app:layout_constraintTop_toTopOf="@id/header_view"
+            app:layout_constraintBottom_toBottomOf="@id/header_view"
+            app:tint="?attr/colorDivider" />
+
+        <TextView
+            android:id="@+id/nutrients_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/nutrients"
+            android:textAppearance="@style/TextAppearance.NApp.Headline2"
+            app:layout_constraintBottom_toBottomOf="@id/header_view"
+            app:layout_constraintStart_toStartOf="@id/header_view"
+            app:layout_constraintTop_toTopOf="@id/header_view" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="@string/per_100g"
+            android:textAppearance="@style/TextAppearance.NApp.Subtitle1"
+            app:layout_constraintBottom_toBottomOf="@id/nutrients_text_view"
+            app:layout_constraintStart_toEndOf="@id/nutrients_text_view" />
+
+        <com.klmn.napp.ui.components.CollapsingContainerView
+            android:id="@+id/collapsing_container_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:expand_duration="200"
+            app:expanded="true"
+            app:layout_constraintTop_toBottomOf="@id/header_view">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/nutrients_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/layout_nutrient" />
+
+        </com.klmn.napp.ui.components.CollapsingContainerView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

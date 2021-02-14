@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/colorBackground">
@@ -14,8 +15,11 @@
             android:id="@+id/collapsing_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:collapsedTitleTextAppearance="@style/TextAppearance.NApp.Title"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleMargin="16dp"
             app:expandedTitleTextAppearance="@style/TextAppearance.NApp.Headline1"
-            app:layout_scrollFlags="scroll|enterAlways"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
             tools:title="Eau Cristaline">
 
             <ImageView
@@ -35,37 +39,66 @@
                 app:layout_collapseMode="parallax"
                 tools:src="@drawable/food_item" />
 
-            <androidx.appcompat.widget.Toolbar
+            <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="wrap_content"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@android:color/transparent"
-                app:layout_collapseMode="pin" />
+                app:layout_collapseMode="pin"
+                app:menu="@menu/details_menu" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:backgroundTint="?attr/colorPrimary"
         android:src="@drawable/ic_add"
         app:borderWidth="0dp"
-        app:layout_anchor="@id/collapsing_toolbar_layout"
+        app:layout_anchor="@id/appbar_layout"
         app:layout_anchorGravity="bottom|end" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="16dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="50sp"
-            android:text="lewniefnefsbeefioefoinsefisenfkenfneoifneofneoifneoinfoiesnfisesfnseoinfosienfosenfosenfoisenf\noijfoiesfosemfosiemfsemfsemfosenfoisnfoinseofnsefoinefnsefsenfnseifsenfnsf\\ffb\\nadoinawodnawiodoadinawoidnawiodnawiodnawoidnawodinawdawdnawdoiawd"/>
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.NApp.Headline2"
+                    android:text="@string/quantity"/>
+
+                <TextView
+                    android:id="@+id/quantity_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:textAppearance="@style/TextAppearance.NApp.Subtitle3"
+                    tools:text="2 kg"/>
+
+            </LinearLayout>
+
+            <include
+                android:id="@+id/nutrients_card"
+                layout="@layout/layout_nutrients_card" />
+
+        </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
 

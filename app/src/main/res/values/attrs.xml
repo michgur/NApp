@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <attr name="colorDivider" format="color" />
+
     <declare-styleable name="FilterChip">
         <attr name="label" format="string" />
         <attr name="criterion" format="string" />
     </declare-styleable>
 
     <attr name="filterChipStyle" format="reference" />
+
+    <declare-styleable name="CollapsingContainerView">
+        <attr name="expanded" format="boolean" />
+        <attr name="expand_duration" format="integer" />
+    </declare-styleable>
 
 </resources>

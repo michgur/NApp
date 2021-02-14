@@ -15,4 +15,8 @@
     <string name="cancel">CANCEL</string>
     <string name="filter">Filter</string>
     <string name="search_empty">There are No Items Matching Your Search</string>
+    <string name="action_add">add_product</string>
+    <string name="per_100g">per 100g</string>
+    <string name="nutrients">Nutrients</string>
+    <string name="quantity">Quantity</string>
 </resources>

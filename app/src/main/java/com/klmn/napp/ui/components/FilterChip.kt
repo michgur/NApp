@@ -76,6 +76,8 @@ class FilterChip @JvmOverloads constructor(
     override fun onRestoreInstanceState(state: Parcelable?) = super.onRestoreInstanceState(
         if (state is Bundle) {
             filter = state.getParcelable(KEY_FILTER)
+            label = state.getString(KEY_LABEL)
+            criterion = state.getString(KEY_CRITERION)
             state.getParcelable(KEY_SUPER)
         }
         else state
