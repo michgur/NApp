@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.setupWithNavController
+import androidx.transition.TransitionInflater
 import com.google.android.material.appbar.AppBarLayout
 import com.klmn.napp.R
 import com.klmn.napp.databinding.FragmentDetailsBinding
@@ -25,6 +26,9 @@ class DetailsFragment : ViewBoundFragment<FragmentDetailsBinding>(FragmentDetail
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
         viewModel.productId = args.productId
+
+        sharedElementEnterTransition = TransitionInflater.from(requireContext())
+            .inflateTransition(android.R.transition.move)
 
         lifecycleScope.launchWhenStarted {
             viewModel.product.collect { product ->
@@ -56,11 +60,13 @@ class DetailsFragment : ViewBoundFragment<FragmentDetailsBinding>(FragmentDetail
             if (collapsingContainerView.isExpanded) dropDownView.rotation = 180f
             nutrientsRecyclerView.adapter = nutrientsAdapter
             headerView.setOnClickListener {
+                collapsingContainerView.toggleExpanded()
                 dropDownView.animate()
                     .setDuration(200L)
-                    .rotationBy(180f)
-                    .start()
-                collapsingContainerView.toggleExpanded()
+                    .rotation(
+                        if (collapsingContainerView.isExpanded) 180f
+                        else 0f
+                    ).start()
             }
         }
     }

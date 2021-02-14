@@ -42,6 +42,13 @@
         <item name="android:fontFamily">serif</item>
     </style>
 
+    <style name="TextAppearance.NApp.Headline1.Shadow" parent="TextAppearance.NApp.Headline1">
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowRadius">8</item>
+        <item name="android:shadowColor">?android:attr/colorBackground</item>
+    </style>
+
     <style name="TextAppearance.NApp.Headline2">
         <item name="android:textColor">?attr/colorOnBackground</item>
         <item name="android:textSize">16sp</item>

@@ -3,6 +3,7 @@ package com.klmn.napp.ui.components
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.klmn.napp.R
 import com.klmn.napp.databinding.LayoutProductBinding
@@ -33,10 +34,17 @@ fun Fragment.productListAdapter() = listAdapter(
         // root.dispatchSetSelected(true) todo handle marquee
         findNavController().navigate(
             R.id.detailsFragment,
-            bundleOf("productId" to product.id)
+            bundleOf("productId" to product.id),
+            null,
+            FragmentNavigatorExtras(
+                imageView to "product_image",
+                washImageView to "product_image_wash"
+            )
         )
     }
 
+    imageView.transitionName = "product_image_${product.imageURL}"
+    washImageView.transitionName = "product_image_wash_${product.imageURL}"
     product.imageURL?.let {
         loadImage(product.imageURL, R.drawable.ic_product, imageView, washImageView)
     }
