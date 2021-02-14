@@ -30,13 +30,20 @@ class CollapsingContainerView @JvmOverloads constructor(
         }
 
     private lateinit var animator: ValueAnimator
+    private var expandedHeight = 0
 
     /* toggle the view state (expanded / collapsed) */
     fun toggleExpanded() {
         isExpanded = !isExpanded
 
-        if (isExpanded) animator.start()
-        else animator.reverse()
+        if (isExpanded) animator.apply {
+            setIntValues(0, expandedHeight)
+            start()
+        }
+        else {
+            expandedHeight = measuredHeight
+            animator.reverse()
+        }
     }
 
     init {
@@ -55,7 +62,8 @@ class CollapsingContainerView @JvmOverloads constructor(
         }
 
         doOnLayout {
-            animator = ValueAnimator.ofInt(0, measuredHeight).apply {
+            expandedHeight = measuredHeight
+            animator = ValueAnimator.ofInt(0, expandedHeight).apply {
                 duration = expandDuration
                 addUpdateListener {
                     setHeight(animatedValue as Int)

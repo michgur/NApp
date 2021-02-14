@@ -2,14 +2,12 @@ package com.klmn.napp.ui.details
 
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.ColorInt
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.setupWithNavController
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.klmn.napp.R
 import com.klmn.napp.databinding.FragmentDetailsBinding
@@ -39,6 +37,11 @@ class DetailsFragment : ViewBoundFragment<FragmentDetailsBinding>(FragmentDetail
                     formatQuantity(product.quantity, false),
                     product.unit
                 )
+                nutrientsAdapter.submitList(listOf(
+                    "carbohydrates" to product.carbs,
+                    "protein" to product.protein,
+                    "fat" to product.fat
+                ))
             }
         }
 
@@ -51,7 +54,7 @@ class DetailsFragment : ViewBoundFragment<FragmentDetailsBinding>(FragmentDetail
 
         nutrientsCard.run {
             if (collapsingContainerView.isExpanded) dropDownView.rotation = 180f
-            nutrientsRecyclerView.adapter = SimpleAdapter
+            nutrientsRecyclerView.adapter = nutrientsAdapter
             headerView.setOnClickListener {
                 dropDownView.animate()
                     .setDuration(200L)
@@ -62,24 +65,16 @@ class DetailsFragment : ViewBoundFragment<FragmentDetailsBinding>(FragmentDetail
         }
     }
 
-    object SimpleAdapter : RecyclerView.Adapter<SimpleAdapter.ViewHolder>() {
-        class ViewHolder(parent: ViewGroup) : ViewBoundHolder<LayoutNutrientBinding>(parent, LayoutNutrientBinding::inflate)
-
-        val items = listOf(
-            "protein",
-            "fat",
-            "carbohydrates"
+    private val nutrientsAdapter = listAdapter(
+        diffCallback { it.first },
+        LayoutNutrientBinding::inflate
+    ) { nutrient: Pair<String, Float> ->
+        nameTextView.text = nutrient.first
+        quantityTextView.text = requireContext().getString(
+            R.string.quantity_with_unit,
+            formatQuantity(nutrient.second),
+            "g"
         )
-        val quantities = listOf("100g", "100g", "100g")
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(parent)
-
-        override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.binding.run {
-            nameTextView.text = items[position]
-            quantityTextView.text = quantities[position]
-        }
-
-        override fun getItemCount() = items.size
     }
 
     @ColorInt private var collapsedTint: Int = 0
