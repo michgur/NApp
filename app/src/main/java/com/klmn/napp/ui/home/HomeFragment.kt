@@ -5,6 +5,8 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -31,12 +33,22 @@ class HomeFragment : ViewBoundFragment<FragmentHomeBinding>(FragmentHomeBinding:
         categoriesRecyclerView.adapter = categoryAdapter
 
         lifecycleScope.launchWhenStarted {
-            viewModel.products.collect(productAdapter::submitList)
+            viewModel.products.collect { products ->
+                if (products.isNotEmpty()) progressBar.isVisible = false
+                productAdapter.submitList(products)
+            }
         }
         lifecycleScope.launchWhenStarted {
-            // todo: loading categories animation (blank cards like youtube's chips)
             viewModel.categories.collect(categoryAdapter::submitList)
         }
+        lifecycleScope.launchWhenStarted {
+            viewModel.errors.collect { e ->
+                Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // fill categoriesRecyclerView w/ some placeholder views until categories are loaded
+        categoryAdapter.submitList((1..10).map { Category("", PLACEHOLDER_PREFIX + it) })
 
         toolbar.searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) onSearch()
@@ -58,11 +70,18 @@ class HomeFragment : ViewBoundFragment<FragmentHomeBinding>(FragmentHomeBinding:
         ).let { findNavController().navigate(it) }
     }
 
+    companion object {
+        private const val PLACEHOLDER_PREFIX = "placeholder_"
+    }
+
     private val productAdapter = productListAdapter()
     private val categoryAdapter = listAdapter(
         diffCallback { it.name },
         LayoutCategoryBinding::inflate
     ) { category: Category ->
+        if (category.name.startsWith(PLACEHOLDER_PREFIX)) return@listAdapter
+
+        textBackgroundView.isVisible = true
         nameTextView.text = category.name
         category.imageURL?.let { url ->
             loadImage(url, R.drawable.ic_product, imageView)

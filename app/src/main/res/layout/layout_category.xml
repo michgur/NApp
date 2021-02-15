@@ -18,15 +18,18 @@
             android:id="@+id/image_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="?attr/colorDivider"
             android:scaleType="centerCrop"
             tools:src="@drawable/beverages" />
 
         <View
+            android:id="@+id/text_background_view"
             android:layout_width="match_parent"
             android:layout_height="36dp"
             android:layout_gravity="bottom"
             android:alpha="0.5"
-            android:background="?android:attr/colorBackground" />
+            android:background="?android:attr/colorBackground"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/name_text_view"
