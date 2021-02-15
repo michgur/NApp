@@ -11,7 +11,9 @@
     <attr name="filterChipStyle" format="reference" />
 
     <declare-styleable name="CollapsingContainerView">
+        <!-- whether the content is collapsed or expanded by default -->
         <attr name="expanded" format="boolean" />
+        <!-- the duration of the collapsing / expanding animation -->
         <attr name="expand_duration" format="integer" />
     </declare-styleable>
 

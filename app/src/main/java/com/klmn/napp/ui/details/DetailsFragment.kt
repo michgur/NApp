@@ -3,6 +3,7 @@ package com.klmn.napp.ui.details
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.ColorInt
+import androidx.core.view.doOnLayout
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -57,7 +58,10 @@ class DetailsFragment : ViewBoundFragment<FragmentDetailsBinding>(FragmentDetail
         toolbar.setNavigationIcon(R.drawable.ic_back)
 
         nutrientsCard.run {
-            if (collapsingContainerView.isExpanded) dropDownView.rotation = 180f
+            dropDownView.doOnLayout {
+                // only updates onRestoreInstanceState
+                if (collapsingContainerView.isExpanded) it.rotation = 180f
+            }
             nutrientsRecyclerView.adapter = nutrientsAdapter
             headerView.setOnClickListener {
                 collapsingContainerView.toggleExpanded()

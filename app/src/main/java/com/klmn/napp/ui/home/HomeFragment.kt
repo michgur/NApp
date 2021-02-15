@@ -34,6 +34,7 @@ class HomeFragment : ViewBoundFragment<FragmentHomeBinding>(FragmentHomeBinding:
             viewModel.products.collect(productAdapter::submitList)
         }
         lifecycleScope.launchWhenStarted {
+            // todo: loading categories animation (blank cards like youtube's chips)
             viewModel.categories.collect(categoryAdapter::submitList)
         }
 
