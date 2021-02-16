@@ -22,5 +22,7 @@ data class Product(
     /* amount of fat in 100g of the product */
     val fat: Float,
     /* additional product labels, i.e. countries, categories, etc. used for complex search */
-    val labels: Map<String, List<String>>
+    val labels: Map<String, List<String>>,
+    /* nutrients listing per 100g of the product */
+    val nutrients: Map<String, Float>
 )

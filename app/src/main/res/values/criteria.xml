@@ -16,7 +16,7 @@
         <item>nutrition_grades</item>
         <item>states</item>
     </string-array>
-    <string-array name="criteria_names">
+    <string-array name="criteria_filters">
         <item>Brand</item>
         <item>Category</item>
         <item>Packaging</item>
@@ -31,5 +31,21 @@
         <item>Traces</item>
         <item>Nutrition Grade</item>
         <item>State</item>
+    </string-array>
+    <string-array name="criteria_labels">
+        <item>Brands</item>
+        <item>Categories</item>
+        <item>Packaging Materials</item>
+        <item>Labels</item>
+        <item>Origin Of Ingredients</item>
+        <item>Manufacturers</item>
+        <item />
+        <item />
+        <item>Available In</item>
+        <item>Additives</item>
+        <item>Allergens</item>
+        <item>Traces</item>
+        <item>Nutrition Grade</item>
+        <item />
     </string-array>
 </resources>

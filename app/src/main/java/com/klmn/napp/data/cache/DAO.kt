@@ -23,6 +23,9 @@ abstract class DAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun storeLabels(labels: List<CacheEntities.Label>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract suspend fun storeNutrients(labels: List<CacheEntities.Nutrient>)
+
     @Transaction
     @Query("SELECT * FROM products WHERE id = :id")
     abstract suspend fun getProduct(id: Long): CacheEntities.LabeledProduct
@@ -31,15 +34,13 @@ abstract class DAO {
     suspend fun storeProducts(products: List<CacheEntities.LabeledProduct>) {
         storeProducts(products.map { it.product })
         storeLabels(products.flatMap { it.labels })
+        storeNutrients(products.flatMap { it.nutrients })
     }
 
     @Transaction
     @RawQuery
     protected abstract suspend fun getProducts(query: SupportSQLiteQuery): List<CacheEntities.LabeledProduct>
 
-    /* implementation- when there's network: pass products directly from network to ui &
-    * store em in background, only bother displaying cached items when there's no network?
-    * other approach- always show matching cached items first, then start pagination */
     suspend fun getProducts(
         query: String,
         filters: Iterable<Filter>?,

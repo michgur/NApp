@@ -11,7 +11,6 @@ import com.klmn.napp.data.network.PixabayAPI
 import com.klmn.napp.data.network.entities.ProductNetworkMapper
 import com.klmn.napp.model.Category
 import com.klmn.napp.model.Filter
-import com.klmn.napp.model.Product
 
 class RepositoryImpl(
     private val context: Context,

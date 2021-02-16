@@ -11,10 +11,7 @@ object CacheEntities {
         val unit: String,
         val imageURL: String?,
         val vegan: Boolean,
-        val energy: Int,
-        val carbs: Float,
-        val protein: Float,
-        val fat: Float
+        val energy: Int
     )
 
     @Entity(tableName = "labels")
@@ -23,6 +20,14 @@ object CacheEntities {
         val product_id: Long,
         val criterion: String,
         val value: String
+    )
+
+    @Entity(tableName = "nutrients")
+    data class Nutrient(
+        @PrimaryKey(autoGenerate = true) val index: Int,
+        val product_id: Long,
+        val nutrient: String,
+        val quantity: Float
     )
 
     @Entity(tableName = "categories")
@@ -35,6 +40,8 @@ object CacheEntities {
     data class LabeledProduct(
         @Embedded val product: Product,
         @Relation(parentColumn = "id", entityColumn = "product_id")
-        val labels: List<Label>
+        val labels: List<Label>,
+        @Relation(parentColumn = "id", entityColumn = "product_id")
+        val nutrients: List<Nutrient>
     )
 }

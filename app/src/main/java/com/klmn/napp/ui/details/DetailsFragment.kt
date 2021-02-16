@@ -2,8 +2,11 @@ package com.klmn.napp.ui.details
 
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.annotation.ColorInt
 import androidx.core.view.doOnLayout
+import androidx.core.view.marginBottom
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -11,12 +14,19 @@ import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.setupWithNavController
 import androidx.transition.TransitionInflater
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.klmn.napp.R
+import com.klmn.napp.data.network.OpenFoodFactsAPI
 import com.klmn.napp.databinding.FragmentDetailsBinding
+import com.klmn.napp.databinding.LayoutLabelBinding
 import com.klmn.napp.databinding.LayoutNutrientBinding
+import com.klmn.napp.model.Filter
+import com.klmn.napp.ui.components.FilterChip
 import com.klmn.napp.util.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import java.util.*
 import kotlin.math.abs
 
 @AndroidEntryPoint
@@ -42,11 +52,11 @@ class DetailsFragment : ViewBoundFragment<FragmentDetailsBinding>(FragmentDetail
                     formatQuantity(product.quantity, false),
                     product.unit
                 )
-                nutrientsAdapter.submitList(listOf(
-                    "carbohydrates" to product.carbs,
-                    "protein" to product.protein,
-                    "fat" to product.fat
-                ))
+                nutrientsAdapter.submitList(product.nutrients.entries.toList())
+                for ((label, values) in product.labels)
+                    createLabelChipGroup(linearLayout, label, values) { chip ->
+                        (chip as? FilterChip)?.let { onChipClick(chip) }
+                    }
             }
         }
 
@@ -76,14 +86,23 @@ class DetailsFragment : ViewBoundFragment<FragmentDetailsBinding>(FragmentDetail
     }
 
     private val nutrientsAdapter = listAdapter(
-        diffCallback { it.first },
+        diffCallback { it.key },
         LayoutNutrientBinding::inflate
-    ) { nutrient: Pair<String, Float> ->
-        nameTextView.text = nutrient.first
+    ) { nutrient: Map.Entry<String, Float> ->
+        val energy = nutrient.key == "Energy"
+        nameTextView.text = nutrient.key
         quantityTextView.text = requireContext().getString(
             R.string.quantity_with_unit,
-            formatQuantity(nutrient.second),
-            "g"
+            formatQuantity(nutrient.value, !energy),
+            if (energy) "kcal" else "g"
+        )
+    }
+
+    private fun onChipClick(chip: FilterChip) = chip.filter?.let { filter ->
+        findNavController().navigate(
+            DetailsFragmentDirections.actionDetailsFragmentToSearchFragment(
+                filters = arrayOf(filter)
+            )
         )
     }
 

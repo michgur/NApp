@@ -4,6 +4,7 @@ import com.klmn.napp.model.Product
 import com.klmn.napp.util.EntityModelMapper
 import com.klmn.napp.util.extractQuantityAndUnit
 import com.klmn.napp.util.fixQuantity
+import java.util.*
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.hasAnnotation
 
@@ -21,7 +22,7 @@ object ProductNetworkMapper : EntityModelMapper<NetworkEntities.Product, Product
             entity.product_name ?: return null,
             quantity ?: return null,
             unit,
-            entity.image_small_url,
+            entity.image_url,
             entity.ingredients_analysis_tags?.contains("en:vegan") ?: false,
             fixQuantity(
                 (entity.nutriments ?: return null).energy,
@@ -39,7 +40,8 @@ object ProductNetworkMapper : EntityModelMapper<NetworkEntities.Product, Product
                 entity.nutriments.fat_100g,
                 entity.nutriments.fat_unit
             )?.first ?: return null,
-            mutableMapOf<String, List<String>>().also { initLabelsMap(entity, it) }
+            mutableMapOf<String, List<String>>().also { initLabelsMap(entity, it) },
+            initNutrientsMap(entity.nutriments)
         )
     }
 
@@ -53,7 +55,26 @@ object ProductNetworkMapper : EntityModelMapper<NetworkEntities.Product, Product
         (label.get(product) as? String).takeUnless {
             it.isNullOrBlank()
         }?.let { values ->
-            map[label.name] = values.split(", ")
+            map[label.name] = values.split(",").mapNotNull {
+                it.takeIf { it.isNotBlank() }?.trim()
+            }
         }
     }
+
+    private val nutrientFields = NetworkEntities.Nutriments::class.declaredMemberProperties.mapNotNull {
+        it.takeUnless { it.name.endsWith("_unit") }
+    }.associateWith {
+        it.name.replace("100g", "")
+            .replace('_', ' ')
+            .toLowerCase(Locale.ROOT)
+            .capitalize(Locale.ROOT)
+            .trim()
+    }
+    private fun initNutrientsMap(nutriments: NetworkEntities.Nutriments) =
+        mutableMapOf<String, Float>().also { map ->
+            for ((property, name) in nutrientFields)
+                (property.get(nutriments) as? String)?.toFloatOrNull()?.let {
+                    map[name] = it
+                }
+        }
 }

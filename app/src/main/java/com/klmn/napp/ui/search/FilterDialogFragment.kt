@@ -32,7 +32,7 @@ class FilterDialogFragment : DialogFragment() {
 
         ArrayAdapter.createFromResource(
             requireContext(),
-            R.array.criteria_names,
+            R.array.criteria_filters,
             android.R.layout.simple_spinner_item
         ).let { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)

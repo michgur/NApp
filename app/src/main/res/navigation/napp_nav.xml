@@ -76,6 +76,10 @@
             android:name="productId"
             app:argType="long" />
 
+        <action
+            android:id="@+id/action_detailsFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+
     </fragment>
 
 </navigation>

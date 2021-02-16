@@ -12,10 +12,7 @@ object ProductCacheMapper : EntityModelMapper<CacheEntities.LabeledProduct, Prod
             model.unit,
             model.imageURL,
             model.vegan,
-            model.energy,
-            model.carbs,
-            model.protein,
-            model.fat
+            model.energy
         ),
         model.labels.map { label ->
             CacheEntities.Label(
@@ -23,6 +20,14 @@ object ProductCacheMapper : EntityModelMapper<CacheEntities.LabeledProduct, Prod
                 model.id,
                 label.key,
                 label.value.joinToString(", ")
+            )
+        },
+        model.nutrients.map { (nutrient, quantity) ->
+            CacheEntities.Nutrient(
+                0,
+                model.id,
+                nutrient,
+                quantity
             )
         }
     )
@@ -35,11 +40,14 @@ object ProductCacheMapper : EntityModelMapper<CacheEntities.LabeledProduct, Prod
         entity.product.imageURL,
         entity.product.vegan,
         entity.product.energy,
-        entity.product.carbs,
-        entity.product.protein,
-        entity.product.fat,
+        entity.nutrients.firstOrNull { it.nutrient == "Carbohydrates" }?.quantity ?: 0f,
+        entity.nutrients.firstOrNull { it.nutrient == "Proteins" }?.quantity ?: 0f,
+        entity.nutrients.firstOrNull { it.nutrient == "Fat" }?.quantity ?: 0f,
         entity.labels.associate { label ->
             label.criterion to label.value.split(", ")
+        },
+        entity.nutrients.associate {
+            it.nutrient to it.quantity
         }
     )
 }

@@ -23,7 +23,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NAppModule {
-    private const val OPEN_FOOD_FACTS_URL = "https://world.openfoodfacts.org/"
+    private const val OPEN_FOOD_FACTS_URL = "https://us.openfoodfacts.org/"
     private const val PIXABAY_URL = "https://pixabay.com/api/"
 
     @Provides @Singleton

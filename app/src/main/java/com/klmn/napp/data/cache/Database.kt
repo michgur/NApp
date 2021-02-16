@@ -9,7 +9,8 @@ import com.klmn.napp.data.cache.entities.CacheEntities
     entities = [
         CacheEntities.Category::class,
         CacheEntities.Product::class,
-        CacheEntities.Label::class
+        CacheEntities.Label::class,
+        CacheEntities.Nutrient::class
     ]
 )
 abstract class Database : RoomDatabase() {
