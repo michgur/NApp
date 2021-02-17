@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.klmn.napp.data.Repository
 import com.klmn.napp.model.Filter
 import com.klmn.napp.model.Product
+import com.klmn.napp.model.Search
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -36,8 +37,8 @@ class SearchViewModel @Inject constructor(
     private var _errors = MutableStateFlow<Exception?>(null)
     val errors get() = _errors.filterNotNull()
 
+    var lastPage = false
     private var page = 0
-    private var lastPage = false
     private var query = ""
 
     fun addFilter(filter: Filter) {
@@ -83,15 +84,24 @@ class SearchViewModel @Inject constructor(
         try {
             Log.d(TAG, "fetching products (query=$query, page=$page, filters=${filters.value})")
             _loading.value = true
-            repository.getProducts(query, page, PAGE_SIZE, filters.value).let { products ->
-                if (products.isEmpty()) lastPage = true
-                else _products.value += products
-            }
+            handleSearch(repository.searchProducts(query, page, PAGE_SIZE, filters.value))
         } catch (e: Exception) {
             Log.e(TAG, e.stackTraceToString())
             _errors.value = e
         } finally {
             _loading.value = false
         }
+    }
+
+    private fun handleSearch(search: Search) {
+        if (search.lastPage) lastPage = true
+
+        val set = products.value.toMutableSet()
+        if (set.addAll(search.products)) {
+            _products.value = set
+            Log.d(TAG, "added ${search.products.size} products (page ${search.page}," +
+                "cached=${search.cached}, lastPage=${search.lastPage}," +
+                "out of ${search.originalCount} products)")
+        } else if (!search.lastPage) nextPage()
     }
 }

@@ -1,6 +1,7 @@
 package com.klmn.napp.di
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Room
 import com.klmn.napp.R
 import com.klmn.napp.data.Repository
@@ -17,6 +18,7 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -33,10 +35,24 @@ object NAppModule {
             "NAPP_DATABASE"
     ).build()
 
+    @Provides @Singleton @Named("open_food_facts")
+    fun provideOpenFoodFactsClient(): OkHttpClient = OkHttpClient()
+        .newBuilder()
+        .readTimeout(60L, TimeUnit.SECONDS)
+        .connectTimeout(60L, TimeUnit.SECONDS)
+        .addInterceptor { chain ->
+            Log.d("OpenFoodFactsAPI", chain.request().url().toString())
+            chain.proceed(chain.request())
+        }
+        .build()
+
     @Provides @Singleton
-    fun provideOpenFoodFactsAPI(): OpenFoodFactsAPI = Retrofit.Builder()
+    fun provideOpenFoodFactsAPI(
+        @Named("open_food_facts") okHttpClient: OkHttpClient
+    ): OpenFoodFactsAPI = Retrofit.Builder()
         .baseUrl(OPEN_FOOD_FACTS_URL)
         .addConverterFactory(GsonConverterFactory.create())
+        .client(okHttpClient)
         .build()
         .create(OpenFoodFactsAPI::class.java)
 

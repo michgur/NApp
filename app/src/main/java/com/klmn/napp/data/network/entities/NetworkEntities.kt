@@ -120,7 +120,7 @@ object NetworkEntities {
     data class Search(
         val page: Int = 0,
         val page_size: Int = 0,
-        val count: Int = 0,
+        val page_count: Int = 0,
         val products: List<Product> = listOf()
     )
 

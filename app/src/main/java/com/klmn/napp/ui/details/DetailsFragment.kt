@@ -114,4 +114,12 @@ class DetailsFragment : ViewBoundFragment<FragmentDetailsBinding>(FragmentDetail
         toolbar.navigationIcon?.setTint(colorInterpolation(fraction, expandedTint, collapsedTint))
         toolbar.menu.findItem(R.id.action_add).icon.alpha = ((fraction - .5f) * 2 * 255).toInt()
     }
+
+    override fun onResume() {
+        super.onResume()
+        binding.addFab.takeIf { it.isOrWillBeShown }?.apply {
+            hide()
+            show()
+        }
+    }
 }

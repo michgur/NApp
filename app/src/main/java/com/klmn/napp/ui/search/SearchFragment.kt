@@ -44,8 +44,7 @@ class SearchFragment : ViewBoundFragment<FragmentSearchBinding>(FragmentSearchBi
         lifecycleScope.launchWhenStarted {
             viewModel.loading.collect {
                 progressBar.isVisible = it
-                // if still loading / successfully loaded products hide empty text
-                emptyText.isVisible = !(it || viewModel.products.value.isNotEmpty())
+                emptyText.isVisible = !it && viewModel.lastPage && viewModel.products.value.isEmpty()
             }
         }
 
@@ -101,5 +100,13 @@ class SearchFragment : ViewBoundFragment<FragmentSearchBinding>(FragmentSearchBi
         ).let(findNavController()::navigate)
 
         binding.toolbar.searchEditText.setText(args.query)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.addChip.apply {
+            isCheckedIconVisible = false
+            isCheckedIconVisible = true
+        }
     }
 }

@@ -41,7 +41,7 @@ class HomeViewModel @Inject constructor(
         }
         viewModelScope.launch {
             try {
-                _products.value = repository.getProducts("", 1)
+                _products.value = repository.searchProducts("", 1).products
             } catch (e: Exception) {
                 Log.e(TAG, e.stackTraceToString())
                 _errors.value = e
