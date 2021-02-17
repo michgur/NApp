@@ -5,6 +5,7 @@
     android:id="@+id/nutrient_card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="32dp"
     app:cardCornerRadius="5dp"
     app:strokeColor="?attr/colorDivider"
     app:strokeWidth="1dp">
@@ -27,9 +28,9 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
             android:src="@drawable/ic_drop_down"
+            app:layout_constraintBottom_toBottomOf="@id/header_view"
             app:layout_constraintEnd_toEndOf="@id/header_view"
             app:layout_constraintTop_toTopOf="@id/header_view"
-            app:layout_constraintBottom_toBottomOf="@id/header_view"
             app:tint="?attr/colorDivider" />
 
         <TextView

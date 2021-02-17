@@ -4,6 +4,7 @@ import com.klmn.napp.model.Category
 import com.klmn.napp.model.Filter
 import com.klmn.napp.model.Product
 import com.klmn.napp.model.Search
+import kotlinx.coroutines.flow.Flow
 
 interface Repository {
     /* search for products matching query & filters, use page=0 for cached products
@@ -17,5 +18,9 @@ interface Repository {
 
     suspend fun getCategories(): List<Category>
 
+    suspend fun getFavoriteProducts(): Flow<List<Product>>
+
     suspend fun findProductById(id: Long): Product
+
+    suspend fun favoriteProduct(id: Long, favorite: Boolean)
 }

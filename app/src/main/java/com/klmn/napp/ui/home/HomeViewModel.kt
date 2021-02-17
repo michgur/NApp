@@ -10,6 +10,7 @@ import com.klmn.napp.model.Product
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,8 +22,8 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
     companion object { const val TAG = "HomeViewModel" }
 
-    private val _products = MutableStateFlow(listOf<Product>())
-    val products get() = _products.asStateFlow()
+    private val _products = MutableStateFlow<List<Product>?>(null)
+    val products get() = _products.filterNotNull()
 
     private val _categories = MutableStateFlow(listOf<Category>())
     val categories get() = _categories.asStateFlow()
@@ -41,7 +42,7 @@ class HomeViewModel @Inject constructor(
         }
         viewModelScope.launch {
             try {
-                _products.value = repository.searchProducts("", 1).products
+                _products.emitAll(repository.getFavoriteProducts())
             } catch (e: Exception) {
                 Log.e(TAG, e.stackTraceToString())
                 _errors.value = e

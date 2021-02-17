@@ -24,5 +24,7 @@ data class Product(
     /* additional product labels, i.e. countries, categories, etc. used for complex search */
     val labels: Map<String, List<String>>,
     /* nutrients listing per 100g of the product */
-    val nutrients: Map<String, Float>
+    val nutrients: Map<String, Float>,
+    /* whether the product was starred by the user */
+    val favorite: Boolean
 )

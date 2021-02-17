@@ -3,25 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="8dp">
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/title_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="64dp"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
         android:gravity="center"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:text="@string/filter_title"
         android:textAppearance="@style/TextAppearance.NApp.Headline2"
-        app:layout_constraintBottom_toTopOf="@+id/divider"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="64dp"
-        android:background="?attr/colorDivider"
+        android:textColor="?attr/colorOnPrimary"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatSpinner
@@ -29,16 +24,19 @@
         style="@style/Widget.AppCompat.Spinner.Underlined"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/divider"
+        app:layout_constraintTop_toBottomOf="@id/title_text"
         tools:listitem="@android:layout/simple_spinner_item" />
 
     <TextView
         android:id="@+id/contains_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:paddingStart="2dp"
         android:paddingEnd="2dp"
@@ -51,6 +49,7 @@
         android:id="@+id/contains_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         app:layout_constraintBottom_toBottomOf="@id/contains_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/contains_text" />
@@ -59,7 +58,9 @@
         android:id="@+id/filter_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
         android:hint="@string/filter_value"
         android:importantForAutofill="no"
         android:inputType="textFilter"
@@ -74,6 +75,7 @@
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="4dp"
         android:text="@string/cancel"
         app:layout_constraintEnd_toStartOf="@id/done_button"
         app:layout_constraintTop_toBottomOf="@+id/filter_text" />
@@ -83,6 +85,7 @@
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="4dp"
         android:text="@string/done"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/filter_text" />

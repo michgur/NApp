@@ -1,12 +1,10 @@
 package com.klmn.napp.ui.details
 
 import android.os.Bundle
+import android.view.Menu
 import android.view.View
-import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.annotation.ColorInt
 import androidx.core.view.doOnLayout
-import androidx.core.view.marginBottom
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -14,14 +12,9 @@ import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.setupWithNavController
 import androidx.transition.TransitionInflater
 import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
 import com.klmn.napp.R
-import com.klmn.napp.data.network.OpenFoodFactsAPI
 import com.klmn.napp.databinding.FragmentDetailsBinding
-import com.klmn.napp.databinding.LayoutLabelBinding
 import com.klmn.napp.databinding.LayoutNutrientBinding
-import com.klmn.napp.model.Filter
 import com.klmn.napp.ui.components.FilterChip
 import com.klmn.napp.util.*
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,6 +52,9 @@ class DetailsFragment : ViewBoundFragment<FragmentDetailsBinding>(FragmentDetail
                     }
             }
         }
+        lifecycleScope.launchWhenStarted {
+            viewModel.favorite.collect(::setFavorite)
+        }
 
         appbarLayout.addOnOffsetChangedListener(this@DetailsFragment)
         collapsedTint = requireContext().theme.resolveColorAttribute(R.attr.colorOnPrimary)
@@ -66,6 +62,9 @@ class DetailsFragment : ViewBoundFragment<FragmentDetailsBinding>(FragmentDetail
 
         toolbar.setupWithNavController(findNavController())
         toolbar.setNavigationIcon(R.drawable.ic_back)
+        addFab.setOnClickListener {
+            viewModel.toggleFavorite()
+        }
 
         nutrientsCard.run {
             dropDownView.doOnLayout {
@@ -106,20 +105,33 @@ class DetailsFragment : ViewBoundFragment<FragmentDetailsBinding>(FragmentDetail
         )
     }
 
+    private fun setFavorite(favorite: Boolean) {
+        val starResource =
+            if (favorite) R.drawable.ic_star_filled
+            else R.drawable.ic_star_empty
+        binding.addFab.apply {
+            setImageResource(starResource)
+            // floating action button disappearing icon bug
+            if (isOrWillBeShown) {
+                hide()
+                show()
+            }
+        }
+        binding.toolbar.menu.findItem(R.id.action_star).apply {
+            setIcon(starResource)
+            setOnMenuItemClickListener {
+                viewModel.toggleFavorite()
+                true
+            }
+        }
+    }
+
     @ColorInt private var collapsedTint: Int = 0
     @ColorInt private var expandedTint: Int = 0
 
     override fun onOffsetChanged(appbar: AppBarLayout?, offset: Int) = binding.run {
         val fraction = abs(offset).toFloat() / appbarLayout.totalScrollRange
         toolbar.navigationIcon?.setTint(colorInterpolation(fraction, expandedTint, collapsedTint))
-        toolbar.menu.findItem(R.id.action_add).icon.alpha = ((fraction - .5f) * 2 * 255).toInt()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        binding.addFab.takeIf { it.isOrWillBeShown }?.apply {
-            hide()
-            show()
-        }
+        toolbar.menu.findItem(R.id.action_star).icon.alpha = ((fraction - .5f) * 2 * 255).toInt()
     }
 }

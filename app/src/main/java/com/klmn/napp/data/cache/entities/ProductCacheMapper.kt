@@ -12,7 +12,8 @@ object ProductCacheMapper : EntityModelMapper<CacheEntities.LabeledProduct, Prod
             model.unit,
             model.imageURL,
             model.vegan,
-            model.energy
+            model.energy,
+            model.favorite
         ),
         model.labels.map { label ->
             CacheEntities.Label(
@@ -48,6 +49,7 @@ object ProductCacheMapper : EntityModelMapper<CacheEntities.LabeledProduct, Prod
         },
         entity.nutrients.associate {
             it.nutrient to it.quantity
-        }
+        },
+        entity.product.favorite
     )
 }

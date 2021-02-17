@@ -11,7 +11,8 @@ object CacheEntities {
         val unit: String,
         val imageURL: String?,
         val vegan: Boolean,
-        val energy: Int
+        val energy: Int,
+        val favorite: Boolean
     )
 
     @Entity(tableName = "labels")

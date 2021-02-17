@@ -8,7 +8,6 @@ import com.klmn.napp.data.cache.DAO
 import com.klmn.napp.data.cache.entities.ProductCacheMapper
 import com.klmn.napp.data.network.OpenFoodFactsAPI
 import com.klmn.napp.data.network.PixabayAPI
-import com.klmn.napp.data.network.entities.ProductNetworkMapper
 import com.klmn.napp.data.network.entities.SearchNetworkMapper
 import com.klmn.napp.model.Category
 import com.klmn.napp.model.Filter
@@ -27,7 +26,7 @@ class RepositoryImpl(
         page: Int,
         pageSize: Int,
         filters: Iterable<Filter>?
-    ) = if (page <= 0) dao.getProducts(query, filters, "").let { products ->
+    ) = if (page <= 0) dao.getProducts(query, filters).let { products ->
             Log.d(TAG, "retrieved cached products (query=$query, filters=$filters)")
             Search(
                 0,
@@ -53,8 +52,14 @@ class RepositoryImpl(
             dao.storeProducts(ProductCacheMapper.toEntityList(search.products))
         }
 
+    override suspend fun getFavoriteProducts() =
+        dao.getFavorites().let(ProductCacheMapper::toModelListFlow)
+
     override suspend fun findProductById(id: Long) =
         dao.getProduct(id).let(ProductCacheMapper::toModel)
+
+    override suspend fun favoriteProduct(id: Long, favorite: Boolean) =
+        dao.favoriteProduct(id, favorite)
 
     override suspend fun getCategories() = dao.getCategories().let { cachedCategories ->
         if (cachedCategories.isEmpty()) {

@@ -40,6 +40,8 @@
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">serif</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:marqueeRepeatLimit">marquee_forever</item>
     </style>
 
     <style name="TextAppearance.NApp.Headline1.Shadow" parent="TextAppearance.NApp.Headline1">

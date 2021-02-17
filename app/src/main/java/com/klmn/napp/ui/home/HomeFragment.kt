@@ -32,7 +32,7 @@ class HomeFragment : ViewBoundFragment<FragmentHomeBinding>(FragmentHomeBinding:
 
         lifecycleScope.launchWhenStarted {
             viewModel.products.collect { products ->
-                if (products.isNotEmpty()) progressBar.isVisible = false
+                progressBar.isVisible = false
                 productAdapter.submitList(products)
             }
         }

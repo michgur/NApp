@@ -45,7 +45,8 @@ object ProductNetworkMapper : EntityModelMapper<NetworkEntities.Product, Product
                 entity.nutriments.fat_unit
             )?.first ?: return filterProduct("invalid or missing fat quantity"),
             mutableMapOf<String, List<String>>().also { initLabelsMap(entity, it) },
-            initNutrientsMap(entity.nutriments)
+            initNutrientsMap(entity.nutriments),
+            false
         )
     }
     

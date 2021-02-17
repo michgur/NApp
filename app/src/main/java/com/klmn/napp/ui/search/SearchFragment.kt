@@ -101,12 +101,4 @@ class SearchFragment : ViewBoundFragment<FragmentSearchBinding>(FragmentSearchBi
 
         binding.toolbar.searchEditText.setText(args.query)
     }
-
-    override fun onResume() {
-        super.onResume()
-        binding.addChip.apply {
-            isCheckedIconVisible = false
-            isCheckedIconVisible = true
-        }
-    }
 }

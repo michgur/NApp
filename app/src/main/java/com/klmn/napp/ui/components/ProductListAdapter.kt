@@ -29,9 +29,9 @@ fun Fragment.productListAdapter() = listAdapter(
     energyUnitTextView.text = getString(R.string.energy_unit)
     energyTextView.text = product.energy.toString()
     veganImageView.isVisible = product.vegan
+    starImageView.isVisible = product.favorite
 
     root.setOnClickListener {
-        // root.dispatchSetSelected(true) todo handle marquee
         findNavController().navigate(
             R.id.detailsFragment,
             bundleOf("productId" to product.id),

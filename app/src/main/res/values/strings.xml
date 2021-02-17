@@ -3,9 +3,9 @@
     <string name="percent">%</string>
     <string name="quantity_with_unit">%1$s %2$s</string>
     <string name="products">Products</string>
-    <string name="products_subtitle">Explore Recently Added Food Products</string>
+    <string name="products_subtitle">Star Food Products To Pin Them Here</string>
     <string name="categories">Categories</string>
-    <string name="categories_subtitle">Find Products in Specific Categories</string>
+    <string name="categories_subtitle">Tap to Find Products in Categories</string>
     <string name="energy_unit">kcal</string>
     <string name="filter_value">value</string>
     <string name="filter_contains">Contains</string>
@@ -15,7 +15,7 @@
     <string name="cancel">CANCEL</string>
     <string name="filter">Filter</string>
     <string name="search_empty">There are No Items Matching Your Search</string>
-    <string name="action_add">add_product</string>
+    <string name="action_star">Star Product</string>
     <string name="per_100g">per 100g</string>
     <string name="nutrients">Nutrients</string>
     <string name="quantity">Quantity</string>

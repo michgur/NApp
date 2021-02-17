@@ -33,6 +33,18 @@
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.NApp.CornerSize20dp"
         tools:src="@drawable/food_item" />
 
+    <ImageView
+        android:id="@+id/star_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:elevation="5dp"
+        android:src="@drawable/ic_star_filled"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/wash_image_view"
+        app:layout_constraintTop_toTopOf="@+id/wash_image_view"
+        app:tint="?attr/colorPrimary" />
+
     <TextView
         android:id="@+id/name_text_view"
         android:layout_width="0dp"

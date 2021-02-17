@@ -5,6 +5,7 @@ import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.klmn.napp.data.cache.entities.CacheEntities
 import com.klmn.napp.model.Filter
+import kotlinx.coroutines.flow.Flow
 import org.intellij.lang.annotations.Language
 
 @Dao
@@ -30,6 +31,13 @@ abstract class DAO {
     @Query("SELECT * FROM products WHERE id = :id")
     abstract suspend fun getProduct(id: Long): CacheEntities.LabeledProduct
 
+    @Transaction
+    @Query("SELECT * FROM products WHERE favorite = 1")
+    abstract fun getFavorites(): Flow<List<CacheEntities.LabeledProduct>>
+
+    @Query("UPDATE products SET favorite = :favorite WHERE id = :id")
+    abstract suspend fun favoriteProduct(id: Long, favorite: Boolean)
+
     @JvmName("storeLabeledProducts")
     suspend fun storeProducts(products: List<CacheEntities.LabeledProduct>) {
         storeProducts(products.map { it.product })
@@ -43,8 +51,7 @@ abstract class DAO {
 
     suspend fun getProducts(
         query: String,
-        filters: Iterable<Filter>?,
-        order: String // todo
+        filters: Iterable<Filter>?
     ): List<CacheEntities.LabeledProduct> {
         val criteria = filters?.map(::filterSelection).takeUnless {
             it.isNullOrEmpty()
