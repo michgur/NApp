@@ -52,7 +52,14 @@ class HomeFragment : ViewBoundFragment<FragmentHomeBinding>(FragmentHomeBinding:
             if (actionId == EditorInfo.IME_ACTION_DONE) onSearch()
             true
         }
+        toolbar.scanButton.setOnClickListener {
+            onScan()
+        }
     }
+
+    private fun onScan() = findNavController().navigate(
+        HomeFragmentDirections.actionHomeFragmentToScannerFragment()
+    ).also { println("what.") }
 
     private fun onSearch() {
         HomeFragmentDirections.actionHomeFragmentToSearchFragment(

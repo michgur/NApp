@@ -3,11 +3,11 @@ package com.klmn.napp.util
 import android.app.Activity
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.Rect
 import android.util.TypedValue
 import android.view.inputmethod.InputMethodManager
-import androidx.annotation.AttrRes
-import androidx.annotation.ColorInt
-import androidx.annotation.FloatRange
+import android.widget.Toast
+import androidx.annotation.*
 import androidx.annotation.IntRange
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -64,4 +64,22 @@ fun Resources.Theme.resolveColorAttribute(
 ): Int = TypedValue().let { value ->
     resolveAttribute(attrId, value, true)
     value.data
+}
+
+fun Fragment.makeToast(text: String, length: Int = Toast.LENGTH_SHORT) =
+    Toast.makeText(requireContext(), text, length).show()
+
+fun Fragment.makeToast(
+    @StringRes resId: Int,
+    vararg formatArgs: Any?,
+    length: Int = Toast.LENGTH_SHORT
+) = Toast.makeText(requireContext(), getString(resId, *formatArgs), length).show()
+
+/* rotate rect in multiples of 90 degrees, clockwise rotation */
+fun Rect.rotate(rotation: Int) = when (rotation % 4) {
+    0 -> Rect(this)
+    1 -> Rect(top, right, bottom, left)
+    2 -> Rect(right, bottom, left, top)
+    3 -> Rect(bottom, left, top, right)
+    else -> throw IllegalStateException()
 }

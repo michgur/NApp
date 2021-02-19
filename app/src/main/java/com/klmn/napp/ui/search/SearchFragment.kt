@@ -63,6 +63,9 @@ class SearchFragment : ViewBoundFragment<FragmentSearchBinding>(FragmentSearchBi
                 true
             }
         }
+        toolbar.scanButton.setOnClickListener {
+            onScan()
+        }
 
         productsRecyclerView.apply {
             adapter = productAdapter
@@ -92,6 +95,10 @@ class SearchFragment : ViewBoundFragment<FragmentSearchBinding>(FragmentSearchBi
         ).let(findNavController()::navigate)
 
     private fun removeFilter(chip: FilterChip) = chip.filter?.let(viewModel::removeFilter)
+
+    private fun onScan() = findNavController().navigate(
+        SearchFragmentDirections.actionSearchFragmentToScannerFragment()
+    )
 
     private fun onSearch() {
         SearchFragmentDirections.actionSearchFragmentSelf(

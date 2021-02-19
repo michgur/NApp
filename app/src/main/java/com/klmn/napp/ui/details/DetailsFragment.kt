@@ -1,6 +1,7 @@
 package com.klmn.napp.ui.details
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.Menu
 import android.view.View
 import androidx.annotation.ColorInt
@@ -10,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.setupWithNavController
+import androidx.transition.Slide
 import androidx.transition.TransitionInflater
 import com.google.android.material.appbar.AppBarLayout
 import com.klmn.napp.R
@@ -28,11 +30,18 @@ class DetailsFragment : ViewBoundFragment<FragmentDetailsBinding>(FragmentDetail
     private val viewModel: DetailsViewModel by viewModels()
     private val args: DetailsFragmentArgs by navArgs()
 
+    /*
+    * Remaining shit:
+    *       icon & splash screen
+    *       scanner
+    *       enough. the API is so awful I don't feel like continuing working on this.
+    * */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
         viewModel.productId = args.productId
 
         sharedElementEnterTransition = TransitionInflater.from(requireContext())
             .inflateTransition(android.R.transition.move)
+        exitTransition = Slide(Gravity.BOTTOM)
 
         lifecycleScope.launchWhenStarted {
             viewModel.product.collect { product ->
