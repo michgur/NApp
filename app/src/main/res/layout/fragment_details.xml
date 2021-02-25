@@ -20,6 +20,7 @@
             app:expandedTitleMargin="16dp"
             app:expandedTitleTextAppearance="@style/TextAppearance.NApp.Headline1.Shadow"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:maxLines="2"
             tools:title="Eau Cristaline">
 
             <ImageView

@@ -17,4 +17,10 @@
         <attr name="expand_duration" format="integer" />
     </declare-styleable>
 
+    <declare-styleable name="BarcodeLoadingView">
+        <attr name="strokeWidth" />
+        <attr name="strokeColor" />
+        <attr name="cornerRadius" />
+    </declare-styleable>
+
 </resources>

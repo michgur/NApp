@@ -85,4 +85,10 @@
         <item name="closeIconTint">?attr/colorOnPrimary</item>
         <item name="ensureMinTouchTargetSize">false</item>
     </style>
+
+    <style name="ScannerOverlay">
+        <item name="android:background">?android:attr/colorBackground</item>
+        <item name="android:backgroundTint">?android:attr/colorBackground</item>
+        <item name="android:alpha">0.5</item>
+    </style>
 </resources>

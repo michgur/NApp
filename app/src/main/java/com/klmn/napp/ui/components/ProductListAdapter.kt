@@ -14,7 +14,7 @@ import com.klmn.napp.util.listAdapter
 import com.klmn.napp.util.loadImage
 
 fun Fragment.productListAdapter() = listAdapter(
-    diffCallback { it.name },
+    diffCallback { it.id },
     LayoutProductBinding::inflate
 ) { product: Product ->
     nameTextView.text = product.name

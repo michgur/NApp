@@ -22,6 +22,7 @@
         android:layout_width="0dp"
         android:layout_height="128dp"
         android:background="@drawable/shape_rounded_corners_border"
+        android:elevation="4dp"
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,15 +30,109 @@
         app:layout_constraintWidth_max="384dp"
         app:layout_constraintWidth_percent="0.8" />
 
-    <TextView
-        android:id="@+id/scanner_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:textAppearance="@style/TextAppearance.NApp.Headline1.Shadow"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:text="Scanned Whatever" />
+    <com.klmn.napp.ui.components.BarcodeLoadingView
+        android:id="@+id/scan_loading_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:elevation="5dp"
+        app:cornerRadius="5dp"
+        app:layout_constraintEnd_toEndOf="@+id/scan_region_view"
+        app:layout_constraintStart_toStartOf="@+id/scan_region_view"
+        app:layout_constraintTop_toTopOf="@+id/scan_region_view"
+        app:layout_constraintBottom_toBottomOf="@+id/scan_region_view"
+        app:strokeColor="?attr/colorOnBackground"
+        app:strokeWidth="4dp" />
+
+    <!--    <View-->
+    <!--        android:id="@+id/scan_animation_view"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        android:background="@drawable/shape_rounded_corners_border_bright"-->
+    <!--        android:elevation="4dp"-->
+    <!--        android:stateListAnimator="@animator/animator_scan"-->
+    <!--        android:visibility="gone"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@id/scan_region_view"-->
+    <!--        app:layout_constraintEnd_toEndOf="@id/scan_region_view"-->
+    <!--        app:layout_constraintStart_toStartOf="@id/scan_region_view"-->
+    <!--        app:layout_constraintTop_toTopOf="@id/scan_region_view" />-->
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/scanner_text"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_margin="16dp"-->
+    <!--        android:textAppearance="@style/TextAppearance.NApp.Headline1.Shadow"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        tools:text="Scanned Whatever" />-->
+
+    <!--    <View-->
+    <!--        android:id="@+id/top_overlay_view"-->
+    <!--        style="@style/ScannerOverlay"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        app:layout_constraintBottom_toTopOf="@+id/scan_loading_view"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+    <!--    <View-->
+    <!--        android:id="@+id/bottom_overlay_view"-->
+    <!--        style="@style/ScannerOverlay"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/scan_loading_view" />-->
+
+    <!--    <View-->
+    <!--        android:id="@+id/right_overlay_view"-->
+    <!--        style="@style/ScannerOverlay"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        app:layout_constraintBottom_toTopOf="@+id/bottom_overlay_view"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toEndOf="@+id/scan_loading_view"-->
+    <!--        app:layout_constraintTop_toTopOf="@+id/scan_loading_view" />-->
+
+    <!--    <View-->
+    <!--        android:id="@+id/left_overlay_view"-->
+    <!--        style="@style/ScannerOverlay"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        app:layout_constraintBottom_toTopOf="@+id/bottom_overlay_view"-->
+    <!--        app:layout_constraintEnd_toStartOf="@+id/scan_loading_view"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="@+id/scan_loading_view" />-->
+
+    <!--    <View-->
+    <!--        style="@style/ScannerOverlay"-->
+    <!--        android:layout_width="8dp"-->
+    <!--        android:layout_height="8dp"-->
+    <!--        android:background="@drawable/shape_corner_bl"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@id/scan_loading_view"-->
+    <!--        app:layout_constraintLeft_toLeftOf="@id/scan_loading_view" />-->
+
+    <!--    <View-->
+    <!--        style="@style/ScannerOverlay"-->
+    <!--        android:layout_width="8dp"-->
+    <!--        android:layout_height="8dp"-->
+    <!--        android:background="@drawable/shape_corner_br"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@id/scan_loading_view"-->
+    <!--        app:layout_constraintRight_toRightOf="@id/scan_loading_view" />-->
+
+    <!--    <View-->
+    <!--        style="@style/ScannerOverlay"-->
+    <!--        android:layout_width="8dp"-->
+    <!--        android:layout_height="8dp"-->
+    <!--        android:background="@drawable/shape_corner_tl"-->
+    <!--        app:layout_constraintLeft_toLeftOf="@id/scan_loading_view"-->
+    <!--        app:layout_constraintTop_toTopOf="@id/scan_loading_view" />-->
+
+    <!--    <View-->
+    <!--        style="@style/ScannerOverlay"-->
+    <!--        android:layout_width="8dp"-->
+    <!--        android:layout_height="8dp"-->
+    <!--        android:background="@drawable/shape_corner_tr"-->
+    <!--        app:layout_constraintRight_toRightOf="@id/scan_loading_view"-->
+    <!--        app:layout_constraintTop_toTopOf="@id/scan_loading_view" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
