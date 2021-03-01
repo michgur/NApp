@@ -8,13 +8,12 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
-import android.view.animation.DecelerateInterpolator
 import androidx.core.os.bundleOf
 import com.klmn.napp.R
 import kotlin.math.abs
 import kotlin.math.ceil
 
-class BarcodeLoadingView @JvmOverloads constructor(
+class RectProgressBar @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -45,15 +44,15 @@ class BarcodeLoadingView @JvmOverloads constructor(
         setWillNotDraw(false)
         context.theme.obtainStyledAttributes(
             attrs,
-            R.styleable.BarcodeLoadingView,
+            R.styleable.RectProgressBar,
             defStyleAttr,
             0
         ).apply {
             try {
-                pathPaint.color = getColor(R.styleable.BarcodeLoadingView_strokeColor, Color.BLACK)
-                pathPaint.strokeWidth = getDimension(R.styleable.BarcodeLoadingView_strokeWidth, 1f)
+                pathPaint.color = getColor(R.styleable.RectProgressBar_strokeColor, Color.BLACK)
+                pathPaint.strokeWidth = getDimension(R.styleable.RectProgressBar_strokeWidth, 1f)
                 padding = pathPaint.strokeWidth / 2
-                getDimension(R.styleable.BarcodeLoadingView_cornerRadius, 0f).takeIf {
+                getDimension(R.styleable.RectProgressBar_cornerRadius, 0f).takeIf {
                     it > 0
                 }?.let { cornerRadius ->
                     pathPaint.pathEffect = CornerPathEffect(cornerRadius)
@@ -68,6 +67,7 @@ class BarcodeLoadingView @JvmOverloads constructor(
         if (visibility == VISIBLE) {
             if (!animator.isStarted) animator.start()
         } else if (animator.isStarted) animator.end()
+        println("visibility changed (visible=${visibility == VISIBLE})")
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -107,7 +107,6 @@ class BarcodeLoadingView @JvmOverloads constructor(
             i++
         }
 
-        // 0->2 1->0->1
         var pathLength = perimeter * abs(progress - 1f) * .8f
         for (j in 0..3) {
             val edgeIndex = (i + j) % 4
@@ -169,6 +168,7 @@ class BarcodeLoadingView @JvmOverloads constructor(
     override fun onRestoreInstanceState(state: Parcelable?) = super.onRestoreInstanceState(
         if (state is Bundle) {
             progress = state.getFloat(KEY_PROGRESS)
+            animator.setCurrentFraction(progress / 2f)
             state.getParcelable(KEY_SUPER)
         } else state
     )

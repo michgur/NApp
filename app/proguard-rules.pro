@@ -19,3 +19,9 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep class com.klmn.napp.model.*
+-keep class com.klmn.napp.data.cache.entities.CacheEntities
+-keep class com.klmn.napp.data.network.entities.NetworkEntities
+-keep class com.klmn.napp.data.network.OpenFoodFactsAPI$Criteria
+-keep class com.klmn.napp.data.network.OpenFoodFactsAPI$OrderBy

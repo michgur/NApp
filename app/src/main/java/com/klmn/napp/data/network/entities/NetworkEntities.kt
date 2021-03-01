@@ -117,6 +117,13 @@ object NetworkEntities {
         val taurine: String? = null
     )
 
+    /* a wrapper class for single product responses */
+    data class ProductWrapper(
+        val product: Product? = null,
+        val status: Int = 0
+    )
+
+    /* a wrapper class for 0 or more product search results */
     data class Search(
         val page: Int = 0,
         val page_size: Int = 0,

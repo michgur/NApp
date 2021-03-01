@@ -11,56 +11,46 @@ import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.klmn.napp.R
-import com.klmn.napp.databinding.LayoutFilterBinding
+import com.klmn.napp.databinding.DialogFilterBinding
 import com.klmn.napp.model.Filter
+import com.klmn.napp.util.ViewBoundDialogFragment
 import com.klmn.napp.util.hideKeyboard
 
-class FilterDialogFragment : DialogFragment() {
-    private var _binding: LayoutFilterBinding? = null
-    private val binding get() = _binding!!
-
+class FilterDialogFragment : ViewBoundDialogFragment<DialogFilterBinding>(DialogFilterBinding::inflate) {
     private lateinit var criteria: Array<String>
 
     private val args: FilterDialogFragmentArgs by navArgs()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = LayoutFilterBinding.inflate(inflater, container, false)
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
         ArrayAdapter.createFromResource(
             requireContext(),
             R.array.criteria_filters,
             android.R.layout.simple_spinner_item
         ).let { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            binding.criteriaSpinner.adapter = adapter
+            criteriaSpinner.adapter = adapter
         }
 
         criteria = resources.getStringArray(R.array.criteria_ids)
         args.filter?.criterion?.let { criteria.indexOf(it) }?.takeIf { it >= 0 }?.let {
-            binding.criteriaSpinner.setSelection(it)
+            criteriaSpinner.setSelection(it)
         }
 
-        binding.containsSwitch.apply {
+        containsSwitch.apply {
             setOnCheckedChangeListener { _, isChecked ->
                 updateContainsText(isChecked)
             }
             isChecked = args.filter?.contains ?: true
         }
 
-        binding.filterText.setText(args.filter?.value)
+        filterText.setText(args.filter?.value)
 
-        binding.cancelButton.setOnClickListener {
+        cancelButton.setOnClickListener {
             dismiss()
         }
-        binding.doneButton.setOnClickListener {
+        doneButton.setOnClickListener {
             onActionDone()
         }
-
-        return binding.root
     }
 
     private fun onActionDone() = Filter(
@@ -82,10 +72,5 @@ class FilterDialogFragment : DialogFragment() {
     override fun onDismiss(dialog: DialogInterface) {
         hideKeyboard()
         super.onDismiss(dialog)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

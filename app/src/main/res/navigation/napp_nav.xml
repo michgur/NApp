@@ -64,7 +64,7 @@
         android:id="@+id/filterDialogFragment"
         android:name="com.klmn.napp.ui.search.FilterDialogFragment"
         android:label="FilterDialogFragment"
-        tools:layout="@layout/layout_filter">
+        tools:layout="@layout/dialog_filter">
 
         <argument
             android:name="filter"
@@ -93,13 +93,23 @@
     <fragment
         android:id="@+id/scannerFragment"
         android:name="com.klmn.napp.ui.scanner.ScannerFragment"
-        android:label="ScannerFragment"
-        tools:layout="@layout/fragment_scanner" >
+        android:label=""
+        tools:layout="@layout/fragment_scanner">
 
         <action
             android:id="@+id/action_scannerFragment_to_detailsFragment"
             app:destination="@id/detailsFragment" />
 
+        <action
+            android:id="@+id/action_scannerFragment_to_insertBarcodeDialog"
+            app:destination="@id/insertBarcodeDialog" />
+
     </fragment>
+
+    <dialog
+        android:id="@+id/insertBarcodeDialog"
+        android:name="com.klmn.napp.ui.scanner.InsertBarcodeDialog"
+        android:label="InsertBarcodeDialog"
+        tools:layout="@layout/dialog_insert_barcode" />
 
 </navigation>

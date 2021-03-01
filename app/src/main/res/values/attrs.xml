@@ -3,6 +3,8 @@
 
     <attr name="colorDivider" format="color" />
 
+    <attr name="colorBackgroundTransparent" format="color" />
+
     <declare-styleable name="FilterChip">
         <attr name="label" format="string" />
         <attr name="criterion" format="string" />
@@ -17,7 +19,7 @@
         <attr name="expand_duration" format="integer" />
     </declare-styleable>
 
-    <declare-styleable name="BarcodeLoadingView">
+    <declare-styleable name="RectProgressBar">
         <attr name="strokeWidth" />
         <attr name="strokeColor" />
         <attr name="cornerRadius" />

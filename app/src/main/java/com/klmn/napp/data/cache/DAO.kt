@@ -29,7 +29,7 @@ abstract class DAO {
 
     @Transaction
     @Query("SELECT * FROM products WHERE id = :id")
-    abstract suspend fun getProduct(id: Long): CacheEntities.LabeledProduct
+    abstract suspend fun getProduct(id: Long): CacheEntities.LabeledProduct?
 
     @Transaction
     @Query("SELECT * FROM products WHERE favorite = 1")

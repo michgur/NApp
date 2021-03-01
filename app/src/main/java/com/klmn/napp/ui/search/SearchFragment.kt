@@ -14,8 +14,10 @@ import com.klmn.napp.model.Filter
 import com.klmn.napp.ui.components.FilterChip
 import com.klmn.napp.ui.components.FilterChipGroupAdapter
 import com.klmn.napp.ui.components.productListAdapter
+import com.klmn.napp.ui.components.setup
 import com.klmn.napp.util.ViewBoundFragment
 import com.klmn.napp.util.doOnScroll
+import com.klmn.napp.util.makeToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -38,7 +40,7 @@ class SearchFragment : ViewBoundFragment<FragmentSearchBinding>(FragmentSearchBi
         }
         lifecycleScope.launchWhenStarted {
             viewModel.errors.collect { e ->
-                Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
+                e.message?.let(::makeToast)
             }
         }
         lifecycleScope.launchWhenStarted {
@@ -56,16 +58,8 @@ class SearchFragment : ViewBoundFragment<FragmentSearchBinding>(FragmentSearchBi
 
         viewModel.search(args.query, args.filters?.toList())
 
-        toolbar.searchEditText.apply {
-            setText(args.query)
-            setOnEditorActionListener { _, actionId, _ ->
-                if (actionId == EditorInfo.IME_ACTION_DONE) onSearch()
-                true
-            }
-        }
-        toolbar.scanButton.setOnClickListener {
-            onScan()
-        }
+        toolbar.searchEditText.setText(args.query)
+        toolbar.setup(onSearch = ::onSearch, onScan = ::onScan)
 
         productsRecyclerView.apply {
             adapter = productAdapter
@@ -100,9 +94,9 @@ class SearchFragment : ViewBoundFragment<FragmentSearchBinding>(FragmentSearchBi
         SearchFragmentDirections.actionSearchFragmentToScannerFragment()
     )
 
-    private fun onSearch() {
+    private fun onSearch(query: String) {
         SearchFragmentDirections.actionSearchFragmentSelf(
-            binding.toolbar.searchEditText.text?.toString() ?: "",
+            query,
             viewModel.filters.value.toTypedArray()
         ).let(findNavController()::navigate)
 

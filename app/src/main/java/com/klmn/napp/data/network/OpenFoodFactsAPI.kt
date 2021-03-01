@@ -4,6 +4,7 @@ import com.klmn.napp.data.network.entities.NetworkEntities
 import com.klmn.napp.model.Filter
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.http.QueryMap
 import kotlin.reflect.full.declaredMemberProperties
@@ -13,6 +14,12 @@ private val fields = NetworkEntities.Product::class.declaredMemberProperties
     .reduce { a, b -> "$a,$b" }
 
 interface OpenFoodFactsAPI {
+    @GET("/api/v0/product/{id}.json")
+    suspend fun getProduct(
+        @Path("id") productId: Long,
+        @Query("fields") requiredFields: String = fields
+    ): Response<NetworkEntities.ProductWrapper>
+
     @GET("/cgi/search.pl?json=1")
     suspend fun getProducts(
         @Query("search_terms") query: String,

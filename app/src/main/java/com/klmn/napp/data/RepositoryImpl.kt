@@ -8,9 +8,12 @@ import com.klmn.napp.data.cache.DAO
 import com.klmn.napp.data.cache.entities.ProductCacheMapper
 import com.klmn.napp.data.network.OpenFoodFactsAPI
 import com.klmn.napp.data.network.PixabayAPI
+import com.klmn.napp.data.network.entities.ProductLabel
+import com.klmn.napp.data.network.entities.ProductNetworkMapper
 import com.klmn.napp.data.network.entities.SearchNetworkMapper
 import com.klmn.napp.model.Category
 import com.klmn.napp.model.Filter
+import com.klmn.napp.model.Product
 import com.klmn.napp.model.Search
 
 class RepositoryImpl(
@@ -55,8 +58,21 @@ class RepositoryImpl(
     override suspend fun getFavoriteProducts() =
         dao.getFavorites().let(ProductCacheMapper::toModelListFlow)
 
-    override suspend fun findProductById(id: Long) =
-        dao.getProduct(id).let(ProductCacheMapper::toModel)
+    override suspend fun findProductById(id: Long): Product {
+        Log.d(TAG, "trying to find product in cache (id=$id)")
+        dao.getProduct(id)?.let { cachedProduct ->
+            Log.d(TAG, "found product (name=${cachedProduct.product.name})")
+            return ProductCacheMapper.toModel(cachedProduct)
+        }
+        Log.d(TAG, "product not found, fetching from network")
+        openFoodFactsAPI.getProduct(id).let { response ->
+            Log.d(TAG, "retrieved product from network (success=${response.isSuccessful})")
+            if (response.isSuccessful)
+                return response.body()?.product?.let(ProductNetworkMapper::toModel)
+                    ?: throw RuntimeException(context.getString(R.string.no_results))
+            throw RuntimeException(response.errorBody()?.string())
+        }
+    }
 
     override suspend fun favoriteProduct(id: Long, favorite: Boolean) =
         dao.favoriteProduct(id, favorite)

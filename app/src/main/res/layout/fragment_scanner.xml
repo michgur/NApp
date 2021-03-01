@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@drawable/shape_transparent_toolbar"
+        android:elevation="4dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:menu="@menu/scanner_menu" />
 
     <SurfaceView
         android:id="@+id/surface_view"
@@ -30,109 +38,111 @@
         app:layout_constraintWidth_max="384dp"
         app:layout_constraintWidth_percent="0.8" />
 
-    <com.klmn.napp.ui.components.BarcodeLoadingView
+    <com.klmn.napp.ui.components.RectProgressBar
         android:id="@+id/scan_loading_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:elevation="5dp"
+        android:visibility="gone"
         app:cornerRadius="5dp"
+        app:layout_constraintBottom_toBottomOf="@+id/scan_region_view"
         app:layout_constraintEnd_toEndOf="@+id/scan_region_view"
         app:layout_constraintStart_toStartOf="@+id/scan_region_view"
         app:layout_constraintTop_toTopOf="@+id/scan_region_view"
-        app:layout_constraintBottom_toBottomOf="@+id/scan_region_view"
         app:strokeColor="?attr/colorOnBackground"
         app:strokeWidth="4dp" />
 
-    <!--    <View-->
-    <!--        android:id="@+id/scan_animation_view"-->
-    <!--        android:layout_width="0dp"-->
-    <!--        android:layout_height="0dp"-->
-    <!--        android:background="@drawable/shape_rounded_corners_border_bright"-->
-    <!--        android:elevation="4dp"-->
-    <!--        android:stateListAnimator="@animator/animator_scan"-->
-    <!--        android:visibility="gone"-->
-    <!--        app:layout_constraintBottom_toBottomOf="@id/scan_region_view"-->
-    <!--        app:layout_constraintEnd_toEndOf="@id/scan_region_view"-->
-    <!--        app:layout_constraintStart_toStartOf="@id/scan_region_view"-->
-    <!--        app:layout_constraintTop_toTopOf="@id/scan_region_view" />-->
+    <View
+        android:id="@+id/scan_animation_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/shape_rounded_corners_border_bright"
+        android:elevation="4dp"
+        android:stateListAnimator="@animator/animator_scan"
+        app:layout_constraintBottom_toBottomOf="@id/scan_region_view"
+        app:layout_constraintEnd_toEndOf="@id/scan_region_view"
+        app:layout_constraintStart_toStartOf="@id/scan_region_view"
+        app:layout_constraintTop_toTopOf="@id/scan_region_view" />
 
-    <!--    <TextView-->
-    <!--        android:id="@+id/scanner_text"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_margin="16dp"-->
-    <!--        android:textAppearance="@style/TextAppearance.NApp.Headline1.Shadow"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        tools:text="Scanned Whatever" />-->
+    <View
+        android:id="@+id/top_overlay_view"
+        style="@style/ScannerOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/scan_region_view"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!--    <View-->
-    <!--        android:id="@+id/top_overlay_view"-->
-    <!--        style="@style/ScannerOverlay"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="0dp"-->
-    <!--        app:layout_constraintBottom_toTopOf="@+id/scan_loading_view"-->
-    <!--        app:layout_constraintTop_toTopOf="parent" />-->
+    <View
+        android:id="@+id/bottom_overlay_view"
+        style="@style/ScannerOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scan_region_view" />
 
-    <!--    <View-->
-    <!--        android:id="@+id/bottom_overlay_view"-->
-    <!--        style="@style/ScannerOverlay"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="0dp"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/scan_loading_view" />-->
+    <View
+        android:id="@+id/right_overlay_view"
+        style="@style/ScannerOverlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_overlay_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/scan_region_view"
+        app:layout_constraintTop_toTopOf="@+id/scan_region_view" />
 
-    <!--    <View-->
-    <!--        android:id="@+id/right_overlay_view"-->
-    <!--        style="@style/ScannerOverlay"-->
-    <!--        android:layout_width="0dp"-->
-    <!--        android:layout_height="0dp"-->
-    <!--        app:layout_constraintBottom_toTopOf="@+id/bottom_overlay_view"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toEndOf="@+id/scan_loading_view"-->
-    <!--        app:layout_constraintTop_toTopOf="@+id/scan_loading_view" />-->
+    <View
+        android:id="@+id/left_overlay_view"
+        style="@style/ScannerOverlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_overlay_view"
+        app:layout_constraintEnd_toStartOf="@+id/scan_region_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/scan_region_view" />
 
-    <!--    <View-->
-    <!--        android:id="@+id/left_overlay_view"-->
-    <!--        style="@style/ScannerOverlay"-->
-    <!--        android:layout_width="0dp"-->
-    <!--        android:layout_height="0dp"-->
-    <!--        app:layout_constraintBottom_toTopOf="@+id/bottom_overlay_view"-->
-    <!--        app:layout_constraintEnd_toStartOf="@+id/scan_loading_view"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toTopOf="@+id/scan_loading_view" />-->
+    <View
+        style="@style/ScannerOverlay"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:background="@drawable/shape_corner_bl"
+        app:layout_constraintBottom_toBottomOf="@id/scan_region_view"
+        app:layout_constraintLeft_toLeftOf="@id/scan_region_view" />
 
-    <!--    <View-->
-    <!--        style="@style/ScannerOverlay"-->
-    <!--        android:layout_width="8dp"-->
-    <!--        android:layout_height="8dp"-->
-    <!--        android:background="@drawable/shape_corner_bl"-->
-    <!--        app:layout_constraintBottom_toBottomOf="@id/scan_loading_view"-->
-    <!--        app:layout_constraintLeft_toLeftOf="@id/scan_loading_view" />-->
+    <View
+        style="@style/ScannerOverlay"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:background="@drawable/shape_corner_br"
+        app:layout_constraintBottom_toBottomOf="@id/scan_region_view"
+        app:layout_constraintRight_toRightOf="@id/scan_region_view" />
 
-    <!--    <View-->
-    <!--        style="@style/ScannerOverlay"-->
-    <!--        android:layout_width="8dp"-->
-    <!--        android:layout_height="8dp"-->
-    <!--        android:background="@drawable/shape_corner_br"-->
-    <!--        app:layout_constraintBottom_toBottomOf="@id/scan_loading_view"-->
-    <!--        app:layout_constraintRight_toRightOf="@id/scan_loading_view" />-->
+    <View
+        android:id="@+id/view"
+        style="@style/ScannerOverlay"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:background="@drawable/shape_corner_tl"
+        app:layout_constraintLeft_toLeftOf="@id/scan_region_view"
+        app:layout_constraintTop_toTopOf="@id/scan_region_view" />
 
-    <!--    <View-->
-    <!--        style="@style/ScannerOverlay"-->
-    <!--        android:layout_width="8dp"-->
-    <!--        android:layout_height="8dp"-->
-    <!--        android:background="@drawable/shape_corner_tl"-->
-    <!--        app:layout_constraintLeft_toLeftOf="@id/scan_loading_view"-->
-    <!--        app:layout_constraintTop_toTopOf="@id/scan_loading_view" />-->
+    <View
+        style="@style/ScannerOverlay"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:background="@drawable/shape_corner_tr"
+        app:layout_constraintRight_toRightOf="@id/scan_region_view"
+        app:layout_constraintTop_toTopOf="@id/scan_region_view" />
 
-    <!--    <View-->
-    <!--        style="@style/ScannerOverlay"-->
-    <!--        android:layout_width="8dp"-->
-    <!--        android:layout_height="8dp"-->
-    <!--        android:background="@drawable/shape_corner_tr"-->
-    <!--        app:layout_constraintRight_toRightOf="@id/scan_loading_view"-->
-    <!--        app:layout_constraintTop_toTopOf="@id/scan_loading_view" />-->
+    <com.google.android.material.chip.Chip
+        android:id="@+id/prompt_chip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="32dp"
+        android:backgroundTint="?attr/colorBackgroundTransparent"
+        android:textAppearance="@style/TextAppearance.NApp.Subtitle3"
+        app:chipStrokeWidth="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

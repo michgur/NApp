@@ -1,6 +1,9 @@
 package com.klmn.napp.ui.home
 
+import android.graphics.Rect
 import android.os.Bundle
+import android.text.method.Touch
+import android.view.TouchDelegate
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
@@ -15,6 +18,7 @@ import com.klmn.napp.databinding.LayoutCategoryBinding
 import com.klmn.napp.model.Category
 import com.klmn.napp.model.Filter
 import com.klmn.napp.ui.components.productListAdapter
+import com.klmn.napp.ui.components.setup
 import com.klmn.napp.util.ViewBoundFragment
 import com.klmn.napp.util.diffCallback
 import com.klmn.napp.util.listAdapter
@@ -48,22 +52,16 @@ class HomeFragment : ViewBoundFragment<FragmentHomeBinding>(FragmentHomeBinding:
         // fill categoriesRecyclerView w/ some placeholder views until categories are loaded
         categoryAdapter.submitList((1..10).map { Category("", PLACEHOLDER_PREFIX + it) })
 
-        toolbar.searchEditText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) onSearch()
-            true
-        }
-        toolbar.scanButton.setOnClickListener {
-            onScan()
-        }
+        toolbar.setup(onSearch = ::onSearch, onScan = ::onScan)
     }
 
     private fun onScan() = findNavController().navigate(
         HomeFragmentDirections.actionHomeFragmentToScannerFragment()
-    ).also { println("what.") }
+    )
 
-    private fun onSearch() {
+    private fun onSearch(query: String) {
         HomeFragmentDirections.actionHomeFragmentToSearchFragment(
-            binding.toolbar.searchEditText.text?.toString() ?: ""
+            query
         ).let(findNavController()::navigate)
 
         binding.toolbar.searchEditText.setText("")
