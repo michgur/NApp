@@ -26,4 +26,7 @@
     <string name="scanner_point">Point your camera at a barcode</string>
     <string name="scanner_detected">Barcode detected: %1$d</string>
     <string name="scanner_success">Success</string>
+    <string name="scanner_permission">Allow Camera Use</string>
+    <string name="favorite_enabled">Product will be added to favorites</string>
+    <string name="favorite_disabled">Product will be removed from favorites</string>
 </resources>

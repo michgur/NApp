@@ -78,13 +78,13 @@ class RepositoryImpl(
         dao.favoriteProduct(id, favorite)
 
     override suspend fun getCategories() = dao.getCategories().let { cachedCategories ->
-        if (cachedCategories.isEmpty()) {
+//        if (cachedCategories.isEmpty()) {
             context.resources.getStringArray(R.array.categories).map { c ->
                 c.split("|").let {
                     Category(it[0], it[1], getCategoryImageURL(it[1]))
                 }
             }.also { dao.storeCategories(CategoryCacheMapper.toEntityList(it)) }
-        } else CategoryCacheMapper.toModelList(cachedCategories)
+//        } else CategoryCacheMapper.toModelList(cachedCategories)
     }
 
     private suspend fun getCategoryImageURL(name: String) = pixabayAPI

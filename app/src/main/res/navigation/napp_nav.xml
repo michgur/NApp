@@ -104,6 +104,12 @@
             android:id="@+id/action_scannerFragment_to_insertBarcodeDialog"
             app:destination="@id/insertBarcodeDialog" />
 
+        <action
+            android:id="@+id/action_scannerFragment_self"
+            app:destination="@id/scannerFragment"
+            app:popUpTo="@id/scannerFragment"
+            app:popUpToInclusive="true" />
+
     </fragment>
 
     <dialog

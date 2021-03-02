@@ -28,14 +28,17 @@ object NAppModule {
     private const val OPEN_FOOD_FACTS_URL = "https://us.openfoodfacts.org/"
     private const val PIXABAY_URL = "https://pixabay.com/api/"
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideDatabase(@ApplicationContext context: Context): Database = Room.databaseBuilder(
-            context,
-            Database::class.java,
-            "NAPP_DATABASE"
+        context,
+        Database::class.java,
+        "NAPP_DATABASE"
     ).build()
 
-    @Provides @Singleton @Named("open_food_facts")
+    @Provides
+    @Singleton
+    @Named("open_food_facts")
     fun provideOpenFoodFactsClient(): OkHttpClient = OkHttpClient()
         .newBuilder()
         .readTimeout(60L, TimeUnit.SECONDS)
@@ -46,7 +49,8 @@ object NAppModule {
         }
         .build()
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideOpenFoodFactsAPI(
         @Named("open_food_facts") okHttpClient: OkHttpClient
     ): OpenFoodFactsAPI = Retrofit.Builder()
@@ -56,26 +60,32 @@ object NAppModule {
         .build()
         .create(OpenFoodFactsAPI::class.java)
 
-    @Provides @Singleton @Named("pixabay")
+    @Provides
+    @Singleton
+    @Named("pixabay")
     fun providePixabayClient(
         @ApplicationContext context: Context
     ): OkHttpClient = OkHttpClient()
-            .newBuilder()
-            .addInterceptor(parameterInterceptor(
+        .newBuilder()
+        .addInterceptor(
+            parameterInterceptor(
                 "key" to context.resources.getString(R.string.pixabay_api)
-            )).build()
+            )
+        ).build()
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun providePixabayAPI(
         @Named("pixabay") okHttpClient: OkHttpClient
     ): PixabayAPI = Retrofit.Builder()
-            .baseUrl(PIXABAY_URL)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(PixabayAPI::class.java)
+        .baseUrl(PIXABAY_URL)
+        .client(okHttpClient)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+        .create(PixabayAPI::class.java)
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideRepository(
         @ApplicationContext context: Context,
         database: Database,

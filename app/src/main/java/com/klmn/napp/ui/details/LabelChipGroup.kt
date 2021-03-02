@@ -36,9 +36,10 @@ fun createLabelChipGroup(
         values.forEach { value ->
             FilterChip(context).apply {
                 filter = Filter(label, value.replaceFirst(".*:".toRegex(), ""))
-                isCloseIconVisible = false
                 setEnsureMinTouchTargetSize(true)
                 setOnClickListener(onChipClick)
+                isCloseIconVisible = false
+                closeIcon = null
                 root.addView(this)
             }
         }

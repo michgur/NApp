@@ -25,8 +25,8 @@ class HomeViewModel @Inject constructor(
     private val _products = MutableStateFlow<List<Product>?>(null)
     val products get() = _products.filterNotNull()
 
-    private val _categories = MutableStateFlow(listOf<Category>())
-    val categories get() = _categories.asStateFlow()
+    private val _categories = MutableStateFlow<List<Category>?>(null)
+    val categories get() = _categories.filterNotNull()
 
     private var _errors = MutableStateFlow<Exception?>(null)
     val errors get() = _errors.filterNotNull()

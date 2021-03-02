@@ -22,7 +22,7 @@ class SearchViewModel @Inject constructor(
 ) : ViewModel() {
     companion object {
         const val TAG = "SearchViewModel"
-        const val PAGE_SIZE = 20
+        const val PAGE_SIZE = 40
     }
 
     private val _products = MutableStateFlow(setOf<Product>())

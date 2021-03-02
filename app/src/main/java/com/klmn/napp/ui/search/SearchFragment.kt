@@ -32,7 +32,9 @@ class SearchFragment : ViewBoundFragment<FragmentSearchBinding>(FragmentSearchBi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.run {
         lifecycleScope.launchWhenStarted {
             viewModel.products.collect { products ->
-                productAdapter.submitList(products.toList())
+                productAdapter.submitList(products.toList()) {
+                    if (products.isNotEmpty()) progressBar.isVisible = false
+                }
             }
         }
         lifecycleScope.launchWhenStarted {
@@ -45,7 +47,7 @@ class SearchFragment : ViewBoundFragment<FragmentSearchBinding>(FragmentSearchBi
         }
         lifecycleScope.launchWhenStarted {
             viewModel.loading.collect {
-                progressBar.isVisible = it
+                if (it) progressBar.isVisible = true // hidden only after products are submitted
                 emptyText.isVisible = !it && viewModel.lastPage && viewModel.products.value.isEmpty()
             }
         }

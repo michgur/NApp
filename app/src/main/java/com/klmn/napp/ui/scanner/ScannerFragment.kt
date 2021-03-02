@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.SurfaceHolder
 import android.view.View
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.util.isNotEmpty
 import androidx.core.view.doOnLayout
 import androidx.core.view.isVisible
@@ -37,7 +38,6 @@ import com.klmn.napp.util.makeToast
 import com.klmn.napp.util.resolveColorAttribute
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-
 @AndroidEntryPoint
 class ScannerFragment : ViewBoundFragment<FragmentScannerBinding>(FragmentScannerBinding::inflate),
     SurfaceHolder.Callback, Detector.Processor<Barcode> {
@@ -80,6 +80,10 @@ class ScannerFragment : ViewBoundFragment<FragmentScannerBinding>(FragmentScanne
             }
         }
 
+        binding.permissionChip.setOnClickListener {
+            startCamera()
+        }
+
         findNavController().currentBackStackEntry
             ?.savedStateHandle
             ?.getLiveData<String>("barcode")?.observe(viewLifecycleOwner) { barcode ->
@@ -107,10 +111,8 @@ class ScannerFragment : ViewBoundFragment<FragmentScannerBinding>(FragmentScanne
             binding.scanAnimationView.isVisible = true
             binding.scanLoadingView.isVisible = false
 
-            if (surfaceCreated) {
-                startCamera()
-                promptText(getString(R.string.scanner_point))
-            } else Unit
+            if (surfaceCreated) startCamera()
+            promptText(getString(R.string.scanner_point))
         }
         LOOKUP -> {
             binding.scanAnimationView.isVisible = false
@@ -160,13 +162,27 @@ class ScannerFragment : ViewBoundFragment<FragmentScannerBinding>(FragmentScanne
     private fun startCamera() {
         surfaceCreated = true
         try {
-            if (ActivityCompat.checkSelfPermission(requireContext(), CAMERA) == PERMISSION_GRANTED)
+            if (ContextCompat.checkSelfPermission(requireContext(), CAMERA) == PERMISSION_GRANTED) {
                 cameraSource.start(binding.surfaceView.holder)
-            else ActivityCompat.requestPermissions(requireActivity(), arrayOf(CAMERA), 1)
+                binding.permissionChip.isVisible = false
+            }
+            else {
+                requestPermissions(arrayOf(CAMERA), 1)
+                binding.permissionChip.isVisible = true
+            }
         } catch (e: Exception) {
             Log.d(TAG, e.stackTraceToString())
             e.message?.let(::promptText)
         }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == 1 && grantResults[permissions.indexOf(CAMERA)] == PERMISSION_GRANTED)
+            startCamera()
     }
 
     override fun surfaceCreated(holder: SurfaceHolder) = startCamera()
@@ -198,3 +214,4 @@ class ScannerFragment : ViewBoundFragment<FragmentScannerBinding>(FragmentScanne
         if (viewModel.state.value == SCANNING) initScanner()
     }
 }
+

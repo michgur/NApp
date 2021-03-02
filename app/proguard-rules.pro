@@ -21,7 +21,28 @@
 #-renamesourcefileattribute SourceFile
 
 -keep class com.klmn.napp.model.*
--keep class com.klmn.napp.data.cache.entities.CacheEntities
--keep class com.klmn.napp.data.network.entities.NetworkEntities
+-keep class com.klmn.napp.data.cache.entities.CacheEntities$Product
+-keep class com.klmn.napp.data.cache.entities.CacheEntities$Category
+-keep class com.klmn.napp.data.cache.entities.CacheEntities$Label
+-keep class com.klmn.napp.data.cache.entities.CacheEntities$LabeledProduct
+-keep class com.klmn.napp.data.cache.entities.CacheEntities$Nutrient
+-keep class com.klmn.napp.data.cache.DAO
+-keep class com.klmn.napp.data.cache.DAO_Impl
+-keep class com.klmn.napp.data.cache.Database
+-keep class com.klmn.napp.data.cache.Database_Impl
+-keep class com.klmn.napp.data.network.entities.NetworkEntities$Nutriments
+-keep class com.klmn.napp.data.network.entities.NetworkEntities$PixabayImage
+-keep class com.klmn.napp.data.network.entities.NetworkEntities$PixabaySearch
+-keep class com.klmn.napp.data.network.entities.NetworkEntities$Product
+-keep class com.klmn.napp.data.network.entities.NetworkEntities$ProductWrapper
+-keep class com.klmn.napp.data.network.entities.NetworkEntities$Search
+-keep class com.klmn.napp.data.network.entities.ProductNetworkMapper
+-keep class com.klmn.napp.data.network.OpenFoodFactsAPI
 -keep class com.klmn.napp.data.network.OpenFoodFactsAPI$Criteria
 -keep class com.klmn.napp.data.network.OpenFoodFactsAPI$OrderBy
+-keep class com.klmn.napp.data.network.PixabayAPI
+-keep class com.klmn.napp.data.Repository
+-keep class com.klmn.napp.data.RepositoryImpl
+-keep class com.klmn.napp.di.NAppModule
+
+-dontobfuscate
